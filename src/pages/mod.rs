@@ -22,5 +22,8 @@ pub(crate) fn about() {}
 
 /// ### Hello
 /// #### Another one here
+/// ```rust
+/// fn hello() {}
+/// ```
 #[blog_post(title = "My Blog Post", published = true, publish_date = "2023-01-01")]
 pub(crate) fn example_post() {}

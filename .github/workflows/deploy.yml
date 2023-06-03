@@ -34,7 +34,6 @@ jobs:
       - name: Build site
         run: | 
           cargo run
-          mv _build/ _site/
           
       - name: Upload artefacts
         uses: actions/upload-pages-artifact@v1
