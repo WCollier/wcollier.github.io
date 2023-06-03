@@ -3,6 +3,10 @@ use site::Site;
 use page::Meta;
 use page_generator::PageGenerator;
 
+const HIGHLIGHT_JS_CSS: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css";
+
+const HIGHLIGHT_JS_SCRIPT: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js";
+
 pub(crate) fn template(site: &Site, navbar_items: &Markup, page: &impl PageGenerator) -> Markup {
     let meta = page.meta();
 
@@ -13,6 +17,11 @@ pub(crate) fn template(site: &Site, navbar_items: &Markup, page: &impl PageGener
                 meta charset="UTF-8";
                 meta content="width=device-width,initial-scale=1.0" name="viewport";
                 (page_style()) 
+                link rel="stylesheet" href=(HIGHLIGHT_JS_CSS) {}
+                script src=(HIGHLIGHT_JS_SCRIPT) {}
+                script type="text/javascript" {
+                    "hljs.highlightAll();"
+                }
                 title { (meta.title) " | William Collier" }
             }
             body {
