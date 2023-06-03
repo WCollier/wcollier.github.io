@@ -47,10 +47,10 @@ impl PageGenerator for Page {
     }
 
     fn template(&self, _site: &Site) -> Markup {
+        let body = self.body.join("\n");
+
         html! {
-            @for line in self.body {
-                (PreEscaped(markdown::to_html(line)))
-            }
+            (PreEscaped(markdown::to_html(&body)))
         }
     }
 }
