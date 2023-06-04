@@ -43,8 +43,8 @@ pub(crate) fn template(site: &Site, navbar_items: &Markup, page: &impl PageGener
 }
 
 pub(crate) fn navbar_items(site: &Site) -> Markup {
-    let on_navbar_pages = pages_on_navbar(&site.pages);
-    let on_navbar_dynamic_pages = pages_on_navbar(&site.dynamic_pages);
+    let on_navbar_pages = pages_on_navbar(site.pages);
+    let on_navbar_dynamic_pages = pages_on_navbar(site.dynamic_pages);
     let mut navbar_pages = [on_navbar_pages, on_navbar_dynamic_pages]
         .concat()
         .into_iter()

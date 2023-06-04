@@ -5,14 +5,14 @@ use page::Page;
 use page_generator::PageGenerator;
 use templates::{template, navbar_items};
 
-pub(crate) struct Site {
-    pub pages: Vec<Page>,
-    pub blog_posts: Vec<Page>,
-    pub dynamic_pages: Vec<&'static dyn PageGenerator>,
+pub(crate) struct Site<'a> {
+    pub pages: &'a [Page],
+    pub blog_posts: &'a [Page],
+    pub dynamic_pages: &'a [&'static dyn PageGenerator],
     pub args: Args,
 }
 
-impl Site {
+impl Site<'_> {
     const BLOG_BUILD_PATH: &str = "_site";
 
     pub fn generate_site(self) -> std::io::Result<()> {
@@ -26,7 +26,7 @@ impl Site {
 
         fs::create_dir_all(format!("{}/posts", Self::BLOG_BUILD_PATH))?;
 
-        for blog_post in &self.blog_posts {
+        for blog_post in self.blog_posts {
             if !blog_post.page_published(self.args.dev) {
                 continue;
             }
@@ -34,11 +34,11 @@ impl Site {
             self.generate(&navbar_items, blog_post)?;
         }
 
-        for page in &self.pages {
+        for page in self.pages {
             self.generate(&navbar_items, page)?;
         }
 
-        for dynamic_page in &self.dynamic_pages {
+        for dynamic_page in self.dynamic_pages {
             self.generate(&navbar_items, dynamic_page)?;
         }
 

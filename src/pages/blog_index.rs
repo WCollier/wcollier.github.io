@@ -42,7 +42,7 @@ impl PageGenerator for BlogIndex {
     fn template(&self, site: &Site) -> Markup {
         html! {
             ul {
-                @for blog_post in self.sort_blog_posts(&site.blog_posts) {
+                @for blog_post in self.sort_blog_posts(site.blog_posts) {
                     @if blog_post.page_published(site.args.dev) {
                         li { 
                             @if let Some(publish_date) = blog_post.meta.publish_date {

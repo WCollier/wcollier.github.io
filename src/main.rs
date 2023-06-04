@@ -12,9 +12,9 @@ mod templates;
 
 fn main() -> std::io::Result<()> {
     let site = site::Site{ 
-        blog_posts: pages::blog_posts(), 
-        pages: pages::pages(), 
-        dynamic_pages: vec![&pages::blog_index::BlogIndex],
+        blog_posts: &[pages::example_post()],
+        pages: &[pages::index(), pages::about()],
+        dynamic_pages: &[&pages::blog_index::BlogIndex],
         args: args::parse(),
     };
 

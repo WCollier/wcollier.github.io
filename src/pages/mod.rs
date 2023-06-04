@@ -4,14 +4,6 @@ use page::{DATE_FORMAT, Page, Meta};
 
 pub(crate) mod blog_index;
 
-pub(crate) fn pages() -> Vec<Page> {
-    vec![index(), about()]
-}
-
-pub(crate) fn blog_posts() -> Vec<Page> {
-    vec![example_post()]
-}
-
 /// ### Welcome to my website
 #[page(title = "Home", on_navbar = true)]
 pub(crate) fn index() {}
