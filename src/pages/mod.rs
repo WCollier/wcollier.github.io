@@ -12,6 +12,10 @@ pub(crate) fn index() {}
 #[page(title = "About", on_navbar = true)]
 pub(crate) fn about() {}
 
+/// ### This page cannot be found
+#[page(title = "404", page_name = "404", on_navbar = false)]
+pub(crate) fn unknown_page() {}
+
 /// ### Hello
 /// #### Another one here
 /// ```rust
