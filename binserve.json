@@ -10,8 +10,8 @@
     },
 
     "routes": {
-        "/": "_build/",
-        "/posts": "_build/posts/"
+        "/": "_site/",
+        "/posts": "_site/posts/"
     },
 
     "config": {
