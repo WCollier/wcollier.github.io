@@ -9,6 +9,7 @@ use darling::{Error, FromMeta, ast::NestedMeta};
 struct PageArgs {
     title: String,
     route: Option<String>,
+    page_name: Option<String>,
     published: Option<bool>,
     publish_date: Option<String>,
     on_navbar: Option<bool>,
@@ -26,6 +27,7 @@ impl From<BlogPostArgs> for PageArgs {
         PageArgs {
             title: blog_post_args.title,
             route: Some("posts/".to_string()),
+            page_name: None,
             published: Some(blog_post_args.published),
             publish_date: Some(blog_post_args.publish_date),
             on_navbar: Some(false),
@@ -48,14 +50,14 @@ fn create_page<T: FromMeta + Into<PageArgs>>(args: TokenStream, input: TokenStre
         Ok(v) => v,
         Err(e) => { return TokenStream::from(Error::from(e).write_errors()); }
     };
-    let PageArgs{title, published, route, publish_date, on_navbar} = match T::from_list(&attr_args) {
+    let PageArgs{title, published, route, page_name, publish_date, on_navbar} = match T::from_list(&attr_args) {
         Ok(v) => v.into(),
         Err(e) => { return TokenStream::from(e.write_errors()); }
     };
     let fn_item = parse_macro_input!(input as ItemFn);
     let fn_ident = fn_item.sig.ident;
     let body = parse_doc_comments(&fn_item.attrs);
-    let route = format!("{}{}", route.unwrap_or_default(), fn_ident);
+    let route = format!("{}{}", route.unwrap_or_default(), page_name.unwrap_or(fn_ident.to_string()));
     let published = published.unwrap_or(true);
     let publish_date = match publish_date {
         Some(publish_date) => {
