@@ -19,7 +19,7 @@ impl BlogIndex {
             })
             .collect::<Vec<(&Page, NaiveDate)>>();
 
-        sorted_blog_posts_publish_dates.sort_by(|(_, a_publish_date), (_, b_publish_date)| a_publish_date.cmp(b_publish_date));
+        sorted_blog_posts_publish_dates.sort_by(|(_, a_publish_date), (_, b_publish_date)| b_publish_date.cmp(a_publish_date));
 
         sorted_blog_posts_publish_dates
             .into_iter()
