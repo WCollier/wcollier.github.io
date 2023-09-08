@@ -12,7 +12,7 @@ mod templates;
 
 fn main() -> std::io::Result<()> {
     let site = site::Site{ 
-        blog_posts: &[pages::example_post()],
+        blog_posts: &[pages::example_post(), pages::how_my_static_site_generator_works()],
         pages: &[pages::index(), pages::about(), pages::unknown_page()],
         dynamic_pages: &[&pages::blog_index::BlogIndex],
         args: args::parse(),
