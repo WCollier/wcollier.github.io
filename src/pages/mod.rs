@@ -1,8 +1,13 @@
 use site_generator_derive::*;
 use chrono::NaiveDate;
-use page::{DATE_FORMAT, Page, Meta};
+use page::{Page, PageKind, BlogPost};
 
-pub(crate) mod blog_index;
+pub(crate) const BLOG_INDEX: Page = Page {
+    kind: PageKind::BlogIndex,
+    on_navbar: true,
+    title: "Posts",
+    route: "posts/index"
+};
 
 /// ### Welcome to my website
 #[page(title = "Home", on_navbar = true)]
@@ -13,7 +18,7 @@ pub(crate) fn index() {}
 pub(crate) fn about() {}
 
 /// ### This page cannot be found
-#[page(title = "404", page_name = "404", on_navbar = false)]
+#[page(title = "404", file_name = "404")]
 pub(crate) fn unknown_page() {}
 
 /// ### Hello

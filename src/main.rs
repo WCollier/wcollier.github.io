@@ -7,14 +7,17 @@ mod args;
 mod site;
 mod page;
 mod pages;
-mod page_generator;
 mod templates;
 
 fn main() -> std::io::Result<()> {
     let site = site::Site{ 
-        blog_posts: &[pages::example_post()],
-        pages: &[pages::index(), pages::about(), pages::unknown_page()],
-        dynamic_pages: &[&pages::blog_index::BlogIndex],
+        pages: &[
+            pages::example_post(),
+            pages::index(),
+            pages::about(),
+            pages::unknown_page(),
+            pages::BLOG_INDEX
+        ],
         args: args::parse(),
     };
 

@@ -1,15 +1,39 @@
 use maud::{html, Markup, DOCTYPE};
 use site::Site;
-use page::Meta;
-use page_generator::PageGenerator;
+use page::{Page, PageKind, BlogPost};
+
+pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
 
 const HIGHLIGHT_JS_CSS: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css";
 
 const HIGHLIGHT_JS_SCRIPT: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js";
 
-pub(crate) fn template(site: &Site, navbar_items: &Markup, page: &impl PageGenerator) -> Markup {
-    let meta = page.meta();
+pub(crate) fn blog_index_template(site: &Site) -> Markup {
+    let mut blog_posts = site.pages
+        .iter()
+        .filter_map(|page| match page.kind {
+            PageKind::BlogPost(blog_post) => Some((page, blog_post)),
+            _ => None,
+        })
+        .collect::<Vec<(&Page, BlogPost)>>();
 
+    blog_posts.sort_by_key(|(_page, blog_post)| std::cmp::Reverse(blog_post.publish_date));
+
+    html! {
+        ul {
+            @for (page, blog_post) in blog_posts {
+                @if blog_post.page_published(site.args.dev) {
+                    li {
+                        (blog_post.publish_date.format(DATE_FORMAT).to_string()) " - "
+                        a href=(page.full_route()) { (page.title) }
+                    }
+                }
+            }
+        }
+    }
+}
+
+pub(crate) fn template(navbar_items: &Markup, title: &str, content: Markup) -> Markup {
     html! {
         (DOCTYPE)
         html lang="en-gb" {
@@ -22,16 +46,13 @@ pub(crate) fn template(site: &Site, navbar_items: &Markup, page: &impl PageGener
                 script type="text/javascript" {
                     "hljs.highlightAll();"
                 }
-                title { (meta.title) " | William Collier" }
+                title { (title) " | William Collier" }
             }
             body {
                 header { h1 { "William Collier's Website" } }
                 navbar { (navbar_items) }
-                h2 { (meta.title) }
-                @if let Some(date_time) = meta.publish_date {
-                    span class="published" { i { "Published: " (date_time.format("%Y-%m-%d").to_string()) } }
-                }
-                (page.template(site))
+                h2 { (title) }
+                (content)
                 footer { 
                     "William Collier | "
                     a href="https://github.com/WCollier" { "GitHub" }
@@ -44,11 +65,7 @@ pub(crate) fn template(site: &Site, navbar_items: &Markup, page: &impl PageGener
 
 pub(crate) fn navbar_items(site: &Site) -> Markup {
     let on_navbar_pages = pages_on_navbar(site.pages);
-    let on_navbar_dynamic_pages = pages_on_navbar(site.dynamic_pages);
-    let mut navbar_pages = [on_navbar_pages, on_navbar_dynamic_pages]
-        .concat()
-        .into_iter()
-        .peekable();
+    let mut navbar_pages = on_navbar_pages.into_iter().peekable();
 
     html! {
         @while let Some(on_navbar_page) = navbar_pages.next() {
@@ -84,10 +101,9 @@ fn page_style() -> Markup {
     }
 }
 
-fn pages_on_navbar(pages: &[impl PageGenerator]) -> Vec<Meta> {
+fn pages_on_navbar(pages: &[Page]) -> Vec<&Page> {
     pages
         .iter()
-        .map(|page| page.meta())
-        .filter(|meta| meta.on_navbar)
-        .collect::<Vec<Meta>>()
+        .filter(|page| page.on_navbar)
+        .collect::<Vec<&Page>>()
 }

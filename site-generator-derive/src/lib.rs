@@ -5,14 +5,30 @@ use quote::quote;
 use syn::{parse_macro_input, Expr, ExprLit, ItemFn, Lit, Meta, MetaNameValue};
 use darling::{Error, FromMeta, ast::NestedMeta};
 
-#[derive(Debug, Default, FromMeta)]
-struct PageArgs {
+#[derive(Clone, Debug)]
+enum PageKind {
+    StaticPage,
+    BlogPost{
+        published: bool,
+        publish_date: String,
+    }
+}
+
+#[derive(Clone, Debug)]
+struct Page {
+    kind: PageKind,
+    on_navbar: Option<bool>,
     title: String,
     route: Option<String>,
-    page_name: Option<String>,
-    published: Option<bool>,
-    publish_date: Option<String>,
+    file_name: Option<String>,
+}
+
+#[derive(Debug, Default, FromMeta)]
+struct PageArgs {
     on_navbar: Option<bool>,
+    title: String,
+    route: Option<String>,
+    file_name: Option<String>,
 }
 
 #[derive(Default, FromMeta)]
@@ -22,15 +38,29 @@ struct BlogPostArgs {
     publish_date: String,
 }
 
-impl From<BlogPostArgs> for PageArgs {
-    fn from(blog_post_args: BlogPostArgs) -> PageArgs {
-        PageArgs {
+impl From<PageArgs> for Page {
+    fn from(page_args: PageArgs) -> Page {
+        Page {
+            kind: PageKind::StaticPage,
+            on_navbar: page_args.on_navbar,
+            title: page_args.title,
+            route: page_args.route,
+            file_name: page_args.file_name
+        }
+    }
+}
+
+impl From<BlogPostArgs> for Page {
+    fn from(blog_post_args: BlogPostArgs) -> Page {
+        Page {
+            kind: PageKind::BlogPost{
+                published: blog_post_args.published,
+                publish_date: blog_post_args.publish_date,
+            },
+            on_navbar: Some(false),
             title: blog_post_args.title,
             route: Some("posts/".to_string()),
-            page_name: None,
-            published: Some(blog_post_args.published),
-            publish_date: Some(blog_post_args.publish_date),
-            on_navbar: Some(false),
+            file_name: None,
         }
     }
 }
@@ -45,47 +75,49 @@ pub fn blog_post(args: TokenStream, input: TokenStream) -> TokenStream {
     create_page::<BlogPostArgs>(args, input)
 }
 
-fn create_page<T: FromMeta + Into<PageArgs>>(args: TokenStream, input: TokenStream) -> TokenStream {
+fn create_page<T: FromMeta + Into<Page>>(args: TokenStream, input: TokenStream) -> TokenStream {
     let attr_args = match NestedMeta::parse_meta_list(proc_macro2::TokenStream::from(args)) {
         Ok(v) => v,
         Err(e) => { return TokenStream::from(Error::from(e).write_errors()); }
     };
-    let PageArgs{title, published, route, page_name, publish_date, on_navbar} = match T::from_list(&attr_args) {
+    let page = match T::from_list(&attr_args) {
         Ok(v) => v.into(),
         Err(e) => { return TokenStream::from(e.write_errors()); }
     };
     let fn_item = parse_macro_input!(input as ItemFn);
     let fn_ident = fn_item.sig.ident;
     let body = parse_doc_comments(&fn_item.attrs);
-    let route = format!("{}{}", route.unwrap_or_default(), page_name.unwrap_or(fn_ident.to_string()));
-    let published = published.unwrap_or(true);
-    let publish_date = match publish_date {
-        Some(publish_date) => {
-            quote! { 
+    let body = quote! { &[#(#body,)*] };
+    let kind = match page.kind {
+        PageKind::StaticPage => quote! { PageKind::StaticPage{ body: #body} },
+        PageKind::BlogPost{ published, publish_date } => {
+            quote! {
                 {
-                    let publish_date = NaiveDate::parse_from_str(&#publish_date, DATE_FORMAT)
+                    let publish_date = NaiveDate::parse_from_str(&#publish_date, crate::templates::DATE_FORMAT)
                         .ok()
                         .expect("Could not parse date time");
 
-                    Some(publish_date)
+                    PageKind::BlogPost(BlogPost{
+                        published: #published,
+                        publish_date: publish_date,
+                        body: #body
+                    })
                 }
             }
         }
-        None => quote! { None }
     };
-    let on_navbar = on_navbar.unwrap_or(false);
+    let on_navbar = page.on_navbar.unwrap_or_default();
+    let page_title = page.title;
+    let file_name = page.file_name.unwrap_or(fn_ident.to_string());
+    let route = format!("{}{}", page.route.unwrap_or_default(), file_name);
 
     quote! {
         pub(crate) fn #fn_ident() -> Page {
             Page{
-                meta: Meta{
-                    title: #title,
-                    route: #route,
-                    published: #published,
-                    publish_date: #publish_date,
-                    on_navbar: #on_navbar,
-                },
-                body: &[#(#body,)*],
+                kind: #kind,
+                on_navbar: #on_navbar,
+                title: #page_title,
+                route: #route
             }
         }
     }

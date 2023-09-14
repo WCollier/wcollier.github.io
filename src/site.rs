@@ -1,15 +1,12 @@
 use std::{fs, path::Path};
 use maud::Markup;
 use args::Args;
-use page::Page;
-use page_generator::PageGenerator;
+use page::{Page, PageKind, BlogPost};
 use templates::{template, navbar_items};
 
 pub(crate) struct Site<'a> {
-    pub pages: &'a [Page],
-    pub blog_posts: &'a [Page],
-    pub dynamic_pages: &'a [&'static dyn PageGenerator],
-    pub args: Args,
+    pub(crate) pages: &'a [Page],
+    pub(crate) args: Args,
 }
 
 impl Site<'_> {
@@ -26,28 +23,20 @@ impl Site<'_> {
 
         fs::create_dir_all(format!("{}/posts", Self::BLOG_BUILD_PATH))?;
 
-        for blog_post in self.blog_posts {
-            if !blog_post.page_published(self.args.dev) {
+        for page in self.pages {
+            if let PageKind::BlogPost(BlogPost{ published: false, .. }) = page.kind {
                 continue;
             }
 
-            self.generate(&navbar_items, blog_post)?;
-        }
-
-        for page in self.pages {
-            self.generate(&navbar_items, page)?;
-        }
-
-        for dynamic_page in self.dynamic_pages {
-            self.generate(&navbar_items, dynamic_page)?;
+            self.generate(&navbar_items, *page)?;
         }
 
         Ok(())
     }
 
-    fn generate(&self, navbar_items: &Markup, page: &impl PageGenerator) -> std::io::Result<()> {
-        let route = format!("{}/{}.html", Self::BLOG_BUILD_PATH, page.meta().route);
-        let html = template(self, navbar_items, page).into_string();
+    fn generate(&self, navbar_items: &Markup, page: Page) -> std::io::Result<()> {
+        let route = format!("{}/{}.html", Self::BLOG_BUILD_PATH, page.route);
+        let html = template(navbar_items, page.title, page.template(self)).into_string();
 
         println!("Written {route}");
 

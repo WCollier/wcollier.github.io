@@ -2,26 +2,31 @@ use std::path::Path;
 use maud::{html, Markup, PreEscaped};
 use chrono::NaiveDate;
 use site::Site;
-use page_generator::PageGenerator;
-
-pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
+use templates;
 
 #[derive(Copy, Clone, Debug)]
-pub(crate) struct Meta {
-    pub title: &'static str,
-    pub route: &'static str,
-    pub published: bool,
-    pub publish_date: Option<NaiveDate>,
-    pub on_navbar: bool,
+pub(crate) struct BlogPost {
+    pub(crate) published: bool,
+    pub(crate) publish_date: NaiveDate,
+    pub(crate) body: &'static [&'static str]
+}
+
+#[derive(Copy, Clone, Debug)]
+pub(crate) enum PageKind {
+    StaticPage{ body: &'static [&'static str] },
+    BlogPost(BlogPost),
+    BlogIndex,
 }
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct Page {
-    pub(crate) meta: Meta,
-    pub(crate) body: &'static [&'static str],
+    pub(crate) kind: PageKind,
+    pub(crate) on_navbar: bool,
+    pub(crate) title: &'static str,
+    pub(crate) route: &'static str
 }
 
-impl Meta {
+impl Page {
     pub(crate) fn full_route(&self) -> String {
         let path = Path::new(self.route);
 
@@ -33,25 +38,26 @@ impl Meta {
                 format!("/{}.html", self.route)
         }
     }
-}
 
-impl Page {
-    pub(crate) fn page_published(&self, dev_mode: bool) -> bool {
-        self.meta.published || dev_mode
-    }
-}
-
-impl PageGenerator for Page {
-    fn meta(&self) -> Meta {
-        self.meta
-    }
-
-    fn template(&self, _site: &Site) -> Markup {
-        let body = self.body.join("\n");
-
-        html! {
-            (PreEscaped(markdown::to_html(&body)))
+    pub(crate) fn template(&self, site: &Site) -> Markup {
+        match self.kind {
+            PageKind::StaticPage{ body } =>
+                html! { (PreEscaped(markdown::to_html(&body.join("\n")))) },
+            PageKind::BlogPost(blog_post) => html! {
+                span class="published" {
+                    i {
+                        "Published: " (blog_post.publish_date.format("%Y-%m-%d").to_string())
+                    }
+                }
+                (PreEscaped(markdown::to_html(&blog_post.body.join("\n"))))
+            },
+            PageKind::BlogIndex => templates::blog_index_template(site)
         }
     }
 }
 
+impl BlogPost {
+    pub(crate) fn page_published(&self, dev_mode: bool) -> bool {
+        self.published || dev_mode
+    }
+}
