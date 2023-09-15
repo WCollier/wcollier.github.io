@@ -31,22 +31,37 @@ pub(crate) struct Page {
 impl Page {
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
-            PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
-            PageKind::Post(post) => html! {
+            PageKind::StaticPage{ body } =>
+                html! { (self.body_to_markup(&body)) },
+            PageKind::BlogPost(blog_post) => html! {
                 span class="published" {
                     i {
                         "Published: " (post.publish_date.format("%Y-%m-%d").to_string())
                     }
                 }
-                (Self::body_to_markup(post.body))
+
+                (self.body_to_markup(&blog_post.body))
             },
             PageKind::PostsIndex => templates::posts_index_template(site),
             PageKind::HomePage{ body } => templates::home_page_template(site, body)
         }
     }
 
-    pub(crate) fn body_to_markup(body: Body) -> Markup {
-        PreEscaped(markdown::to_html(&body.join("\n")))
+    fn body_to_markup(&self, body: &'static [&'static str]) -> Markup {
+        let body = body.join("\n");
+        let options = comrak::ComrakOptions::default();
+        let syntax_highlighter = comrak::plugins::syntect::SyntectAdapterBuilder
+            ::new()
+            .theme("base16-ocean.light")
+            .build();
+        let plugins = comrak::ComrakPlugins{
+            render: comrak::ComrakRenderPlugins{
+                codefence_syntax_highlighter: Some(&syntax_highlighter),
+                heading_adapter: None,
+            }
+        };
+
+        PreEscaped(comrak::markdown_to_html_with_plugins(&body, &options, &plugins))
     }
 }
 

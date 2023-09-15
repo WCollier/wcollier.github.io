@@ -2,6 +2,7 @@ extern crate site_generator_derive;
 extern crate maud;
 extern crate clap;
 extern crate chrono;
+extern crate comrak;
 
 mod args;
 mod site;
