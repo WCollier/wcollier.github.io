@@ -33,8 +33,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Build site
         run: | 
-          nix develop
-          cargo run
+          nix develop --command cargo run
           
       - name: Upload artefacts
         uses: actions/upload-pages-artifact@v1
