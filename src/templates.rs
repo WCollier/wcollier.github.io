@@ -4,10 +4,6 @@ use page::{Page, Post, Body};
 
 pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
 
-const HIGHLIGHT_JS_CSS: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css";
-
-const HIGHLIGHT_JS_SCRIPT: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js";
-
 pub(crate) fn posts_index_template(site: &Site) -> Markup {
     let mut posts = site.ordered_posts().collect::<Vec<(&Page, Post)>>();
 
@@ -52,11 +48,6 @@ pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Marku
                 meta property="og:title" content=(full_title);
                 meta property="twitter:title" content=(full_title);
                 (page_style()) 
-                link rel="stylesheet" href=(HIGHLIGHT_JS_CSS) {}
-                script src=(HIGHLIGHT_JS_SCRIPT) {}
-                script type="text/javascript" {
-                    "hljs.highlightAll();"
-                }
                 title { (full_title) }
             }
             body {
