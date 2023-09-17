@@ -31,16 +31,14 @@ pub(crate) struct Page {
 impl Page {
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
-            PageKind::StaticPage{ body } =>
-                html! { (self.body_to_markup(&body)) },
+            PageKind::StaticPage{ body } => html! { (self.body_to_markup(body)) },
             PageKind::BlogPost(blog_post) => html! {
                 span class="published" {
                     i {
                         "Published: " (post.publish_date.format("%Y-%m-%d").to_string())
                     }
                 }
-
-                (self.body_to_markup(&blog_post.body))
+                (self.body_to_markup(blog_post.body))
             },
             PageKind::PostsIndex => templates::posts_index_template(site),
             PageKind::HomePage{ body } => templates::home_page_template(site, body)
