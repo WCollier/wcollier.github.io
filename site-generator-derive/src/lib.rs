@@ -133,7 +133,7 @@ fn parse_doc_comments(attrs: &[syn::Attribute]) -> Vec<String> {
                     value: Expr::Lit(ExprLit { lit: Lit::Str(comment), .. }),
                     path,
                     ..
-                }) if path.is_ident("doc") => Some(comment.value().trim().to_string()),
+                }) if path.is_ident("doc") => Some(comment.value().to_string()),
                 _ => None,
             }
         })
