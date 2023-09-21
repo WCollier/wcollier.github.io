@@ -12,7 +12,8 @@ pub(crate) fn blog_index_template(site: &Site) -> Markup {
     let mut blog_posts = site.pages
         .iter()
         .filter_map(|page| match page.kind {
-            PageKind::BlogPost(blog_post) => Some((page, blog_post)),
+            PageKind::BlogPost(blog_post) if blog_post.page_published(site.args.dev) =>
+                Some((page, blog_post)),
             _ => None,
         })
         .collect::<Vec<(&Page, BlogPost)>>();
@@ -22,11 +23,9 @@ pub(crate) fn blog_index_template(site: &Site) -> Markup {
     html! {
         ul {
             @for (page, blog_post) in blog_posts {
-                @if blog_post.page_published(site.args.dev) {
-                    li {
-                        (blog_post.publish_date.format(DATE_FORMAT).to_string()) " - "
-                        a href=(page.full_route()) { (page.title) }
-                    }
+                li {
+                    (blog_post.publish_date.format(DATE_FORMAT).to_string()) " - "
+                    a href=(page.full_route()) { (page.title) }
                 }
             }
         }
