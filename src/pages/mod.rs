@@ -21,14 +21,6 @@ pub(crate) fn about() {}
 #[page(title = "404", file_name = "404")]
 pub(crate) fn unknown_page() {}
 
-/// ### Hello
-/// #### Another one here
-/// ```rust
-/// fn hello() {}
-/// ```
-#[blog_post(title = "My Blog Post", published = true, publish_date = "2023-01-01")]
-pub(crate) fn example_post() {}
-
 /// My website is generated using a custom static site generator written in Rust. There are no
 /// reasons why a pre-existing generator couldn't be used, but I thought writing my own would be
 /// interesting. While thinking about the code, I remembered that Rust has a feature called [rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) 
