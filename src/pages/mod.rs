@@ -34,24 +34,23 @@ pub(crate) fn unknown_page() {}
 /// ```rust
 /// /// ### My blog post
 /// /// This is *fun*.
-/// #[blog_post(title = "My Blog Post", published = true, publish_data = "2023-01-01")]
-/// pub(crate) fn example_post(){}
+/// #[blog_post(title = "My Blog Post", published = true, publish_date = "2023-01-01")]
+/// pub(crate) fn example_post() {}
 /// ```
 ///
 /// ### Why?
 ///
 /// GitHub pages is a cool service and having a personal website could come into use at a later date.
-/// Also, it is **free**. I can't complain about that. I decided that it would be novel to package as much of my site into a single binary. 
-/// Rustdoc and [maud](https://maud.lambda.xyz) allow me to write and template pages all within `.rs` source files. 
+/// Also, it is **free**. I can't complain about that. I decided that it would be novel to package as much of my site into a single binary.
+/// Rustdoc and [maud](https://maud.lambda.xyz) allow me to write and template pages all within `.rs` source files.
 /// Furthermore, I wanted use try GitHub Actions to see if I can use a Nix Flake to ease deployment to Github Pages.
-/// Shockingly, my pipeline managed to pull down the correct dependencies, compile the site and deploy *first time*.
+/// Shockingly, my pipeline managed to pull down the correct dependencies, compile the site and deploy [*first time*](https://github.com/WCollier/wcollier.github.io/actions/runs/5163982875).
 ///
 /// ### Advantages
 ///
 /// * I can modify the site to my heart's content without having to create awkward hacks or
 /// learning an unknown codebase.
-///     * Complex logic or special pages (such as the blog index) are just code, not a templating.
-/// language.
+///     * Complex logic or special pages (such as the [posts index](https://wcollier.github.io/posts)) are all my code, not workarounds built on top of someone else's code.
 /// * I had fun.
 /// 
 /// ### Disadvantages
@@ -61,8 +60,8 @@ pub(crate) fn unknown_page() {}
 /// ### Conclusion
 ///
 /// The purpose of this project wasn't to create a useful or necessarily practical site.
-/// However, I am without constraints that a third-party solution may burden me with.
+/// I am without constraints that a third-party solution may burden me with. However, I am entirely responsible for code base and must implement all features I desire myself.
 ///
-/// See the Git repository [here](https://www.github.com/WCollier/wcollier.github.io)
+/// See the Git repository [here](https://www.github.com/WCollier/wcollier.github.io).
 #[blog_post(title = "How my Static Site Generator works", published = true, publish_date = "2023-08-12")]
 pub(crate) fn how_my_static_site_generator_works() {}
