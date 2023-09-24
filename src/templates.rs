@@ -1,6 +1,6 @@
 use maud::{html, Markup, DOCTYPE};
 use site::Site;
-use page::{Page, PageKind, BlogPost};
+use page::{Page, BlogPost, Body};
 
 pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
 
@@ -9,14 +9,7 @@ const HIGHLIGHT_JS_CSS: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11
 const HIGHLIGHT_JS_SCRIPT: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js";
 
 pub(crate) fn blog_index_template(site: &Site) -> Markup {
-    let mut blog_posts = site.pages
-        .iter()
-        .filter_map(|page| match page.kind {
-            PageKind::BlogPost(blog_post) if blog_post.page_published(site.args.dev) =>
-                Some((page, blog_post)),
-            _ => None,
-        })
-        .collect::<Vec<(&Page, BlogPost)>>();
+    let mut blog_posts = site.ordered_blog_posts().collect::<Vec<(&Page, BlogPost)>>();
 
     blog_posts.sort_by_key(|(_page, blog_post)| std::cmp::Reverse(blog_post.publish_date));
 
@@ -32,7 +25,22 @@ pub(crate) fn blog_index_template(site: &Site) -> Markup {
     }
 }
 
-pub(crate) fn template(navbar_items: &Markup, title: &str, content: Markup) -> Markup {
+pub(crate) fn home_page_template(site: &Site, body: Body) -> Markup {
+    let latest_blog_post = site.ordered_blog_posts().max_by_key(|(_page, blog_post)| blog_post.publish_date);
+
+    html! {
+        (Page::body_to_markup(body))
+
+        @if let Some((page, _latest_blog_post)) = latest_blog_post {
+            p {
+                "Latest blog post: "
+                a href=(page.full_route()) { (page.title) }
+            }
+        }
+    }
+}
+
+pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Markup) -> Markup {
     html! {
         (DOCTYPE)
         html lang="en-gb" {

@@ -2,7 +2,7 @@ use std::{fs, path::Path};
 use maud::Markup;
 use args::Args;
 use page::{Page, PageKind, BlogPost};
-use templates::{template, navbar_items};
+use templates::{master_template, navbar_items};
 
 pub(crate) struct Site<'a> {
     pub(crate) pages: &'a [Page],
@@ -12,7 +12,7 @@ pub(crate) struct Site<'a> {
 impl Site<'_> {
     const BLOG_BUILD_PATH: &str = "_site";
 
-    pub fn generate_site(self) -> std::io::Result<()> {
+    pub(crate) fn generate_site(self) -> std::io::Result<()> {
         let navbar_items = navbar_items(&self);
 
         if Path::try_exists(Path::new(Self::BLOG_BUILD_PATH))? {
@@ -34,9 +34,19 @@ impl Site<'_> {
         Ok(())
     }
 
+    pub(crate) fn ordered_blog_posts(&self) -> impl Iterator<Item = (&Page, BlogPost)> {
+        self.pages
+            .iter()
+            .filter_map(move |page| match page.kind {
+                PageKind::BlogPost(blog_post) if blog_post.page_published(self.args.dev) =>
+                    Some((page, blog_post)),
+                _ => None
+            })
+    }
+
     fn generate(&self, navbar_items: &Markup, page: Page) -> std::io::Result<()> {
-        let route = format!("{}/{}.html", Self::BLOG_BUILD_PATH, page.route);
-        let html = template(navbar_items, page.title, page.template(self)).into_string();
+        let route = format!("{}{}.html", Self::BLOG_BUILD_PATH, page.route);
+        let html = master_template(navbar_items, page.title, page.template(self)).into_string();
 
         println!("Written {route}");
 
