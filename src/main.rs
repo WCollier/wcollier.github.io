@@ -13,10 +13,10 @@ fn main() -> std::io::Result<()> {
     let site = site::Site{ 
         pages: &[
             pages::how_my_static_site_generator_works(),
-            pages::index(),
+            pages::home_page(),
             pages::about(),
             pages::unknown_page(),
-            pages::BLOG_INDEX
+            pages::blog_index()
         ],
         args: args::parse(),
     };

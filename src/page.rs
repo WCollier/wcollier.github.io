@@ -4,18 +4,21 @@ use chrono::NaiveDate;
 use site::Site;
 use templates;
 
+pub(crate) type Body = &'static [&'static str];
+
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct BlogPost {
     pub(crate) published: bool,
     pub(crate) publish_date: NaiveDate,
-    pub(crate) body: &'static [&'static str]
+    pub(crate) body: Body,
 }
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) enum PageKind {
-    StaticPage{ body: &'static [&'static str] },
+    StaticPage{ body: Body },
     BlogPost(BlogPost),
     BlogIndex,
+    HomePage{ body: Body },
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -34,25 +37,29 @@ impl Page {
             (Some(parent), Some(file_name)) if file_name == "index" =>
                 format!("/{}", parent.display()),
 
-            _ => 
+            _ =>
                 format!("/{}.html", self.route)
         }
     }
 
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
-            PageKind::StaticPage{ body } =>
-                html! { (PreEscaped(markdown::to_html(&body.join("\n")))) },
+            PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
             PageKind::BlogPost(blog_post) => html! {
                 span class="published" {
                     i {
                         "Published: " (blog_post.publish_date.format("%Y-%m-%d").to_string())
                     }
                 }
-                (PreEscaped(markdown::to_html(&blog_post.body.join("\n"))))
+                (Self::body_to_markup(blog_post.body))
             },
-            PageKind::BlogIndex => templates::blog_index_template(site)
+            PageKind::BlogIndex => templates::blog_index_template(site),
+            PageKind::HomePage{ body } => templates::home_page_template(site, body)
         }
+    }
+
+    pub(crate) fn body_to_markup(body: Body) -> Markup {
+        PreEscaped(markdown::to_html(&body.join("\n")))
     }
 }
 
