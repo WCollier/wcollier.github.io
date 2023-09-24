@@ -35,10 +35,10 @@ impl Page {
 
         match (path.parent(), path.file_name()) {
             (Some(parent), Some(file_name)) if file_name == "index" =>
-                format!("/{}", parent.display()),
+                format!("{}", parent.display()),
 
             _ =>
-                format!("/{}.html", self.route)
+                format!("{}.html", self.route)
         }
     }
 
