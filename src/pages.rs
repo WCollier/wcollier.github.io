@@ -2,16 +2,9 @@ use site_generator_derive::*;
 use chrono::NaiveDate;
 use page::{Page, PageKind, BlogPost};
 
-pub(crate) const BLOG_INDEX: Page = Page {
-    kind: PageKind::BlogIndex,
-    on_navbar: true,
-    title: "Posts",
-    route: "posts/index"
-};
-
 /// ### Welcome to my website
-#[page(title = "Home", on_navbar = true)]
-pub(crate) fn index() {}
+#[home_page()]
+pub(crate) fn home_page() {}
 
 /// ### My about page
 #[page(title = "About", on_navbar = true)]
@@ -20,6 +13,9 @@ pub(crate) fn about() {}
 /// ### This page cannot be found
 #[page(title = "404", file_name = "404")]
 pub(crate) fn unknown_page() {}
+
+#[blog_index()]
+pub(crate) fn blog_index() {}
 
 /// My website is generated using a custom static site generator written in Rust. There are no
 /// reasons why a pre-existing generator couldn't be used, but I thought writing my own would be
