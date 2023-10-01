@@ -19,7 +19,6 @@
       {
         devShells.default = with pkgs; mkShell {
           buildInputs = [ rust-bin.stable.latest.default binserve ];
-          #RUST_SRC_PATH = rustPlatform.rustLibSrc;
         };
       }
     );
