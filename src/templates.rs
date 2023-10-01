@@ -41,19 +41,23 @@ pub(crate) fn home_page_template(site: &Site, body: Body) -> Markup {
 }
 
 pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Markup) -> Markup {
+    let full_title = format!("{title} | William Collier"); 
+
     html! {
         (DOCTYPE)
         html lang="en-gb" {
             head { 
                 meta charset="UTF-8";
                 meta content="width=device-width,initial-scale=1.0" name="viewport";
+                meta property="og:title" content=(full_title);
+                meta property="twitter:title" content=(full_title);
                 (page_style()) 
                 link rel="stylesheet" href=(HIGHLIGHT_JS_CSS) {}
                 script src=(HIGHLIGHT_JS_SCRIPT) {}
                 script type="text/javascript" {
                     "hljs.highlightAll();"
                 }
-                title { (title) " | William Collier" }
+                title { (full_title) }
             }
             body {
                 header { h1 { "William Collier's Website" } }
