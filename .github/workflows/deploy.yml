@@ -34,7 +34,7 @@ jobs:
           nix develop --command cargo run
           
       - name: Upload artefacts
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
           
   deploy:
     needs: build
