@@ -43,7 +43,7 @@ jobs:
       
     environment:
       name: github-pages
-      url: ${{ steps.deployment.output.page_url }}  
+      url: "https://wcollier.github.io" 
       
     runs-on: ubuntu-latest
     
