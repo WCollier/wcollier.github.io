@@ -18,4 +18,4 @@ jobs:
           pr-labels: |                  # Labels to be set on the PR
             dependencies
             automated
-          token: ${{ secrets.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
