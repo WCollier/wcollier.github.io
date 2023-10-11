@@ -5,7 +5,7 @@ name: Deploy
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
+  pull_request:
     branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -30,24 +30,3 @@ jobs:
       - name: Build site
         run: | 
           nix develop --command cargo run
-          
-      - name: Upload artefacts
-        uses: actions/upload-pages-artifact@v1
-          
-  deploy:
-    needs: build
-    
-    permissions:
-      pages: write
-      id-token: write
-      
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.output.page_url }}  
-      
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
