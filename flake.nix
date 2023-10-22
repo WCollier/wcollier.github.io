@@ -15,10 +15,18 @@
       let 
         overlays = [ ( import rust-overlay) ];
         pkgs = import nixpkgs { inherit system overlays; };
+        cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
       in
       {
         devShells.default = with pkgs; mkShell {
           buildInputs = [ rust-bin.stable.latest.default binserve ];
+        };
+
+        packages.default = pkgs.rustPlatform.buildRustPackage {
+          pname = cargoToml.package.name;
+          version = cargoToml.package.version;
+          src = ./.;
+          cargoLock.lockFile = ./Cargo.lock;
         };
       }
     );
