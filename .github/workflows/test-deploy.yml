@@ -29,4 +29,4 @@ jobs:
       # Runs a single command using the runners shell
       - name: Build site
         run: | 
-          nix develop --command cargo run
+          nix run 
