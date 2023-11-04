@@ -22,6 +22,7 @@ impl Site<'_> {
         fs::create_dir_all(format!("{}/", Self::BLOG_BUILD_PATH))?;
 
         fs::create_dir_all(format!("{}/posts", Self::BLOG_BUILD_PATH))?;
+        fs::create_dir_all(format!("{}/static", Self::BLOG_BUILD_PATH))?;
 
         for page in self.pages {
             if let PageKind::BlogPost(BlogPost{ published: false, .. }) = page.kind {
