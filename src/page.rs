@@ -1,8 +1,8 @@
-use std::path::Path;
 use maud::{html, Markup, PreEscaped};
 use chrono::NaiveDate;
 use site::Site;
 use templates;
+use route::Route;
 
 pub(crate) type Body = &'static [&'static str];
 
@@ -24,24 +24,11 @@ pub(crate) enum PageKind {
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct Page {
     pub(crate) kind: PageKind,
-    pub(crate) on_navbar: bool,
     pub(crate) title: &'static str,
-    pub(crate) route: &'static str
+    pub(crate) route: Route, 
 }
 
 impl Page {
-    pub(crate) fn full_route(&self) -> String {
-        let path = Path::new(self.route);
-
-        match (path.parent(), path.file_name()) {
-            (Some(parent), Some(file_name)) if file_name == "index" =>
-                format!("{}", parent.display()),
-
-            _ =>
-                format!("{}.html", self.route)
-        }
-    }
-
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
             PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
