@@ -1,13 +1,14 @@
 use site_generator_derive::*;
 use chrono::NaiveDate;
 use page::{Page, PageKind, BlogPost};
+use route::Route;
 
 /// ### Welcome to my website
 #[home_page()]
 pub(crate) fn home_page() {}
 
 /// ### My about page
-#[page(title = "About", on_navbar = true)]
+#[page(title = "About")]
 pub(crate) fn about() {}
 
 /// ### This page cannot be found

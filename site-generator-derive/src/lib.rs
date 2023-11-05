@@ -19,7 +19,6 @@ enum PageKind {
 #[derive(Clone, Debug)]
 struct Page {
     kind: PageKind,
-    on_navbar: bool,
     title: String,
     route: String,
     file_name: Option<String>,
@@ -27,7 +26,6 @@ struct Page {
 
 #[derive(Debug, Default, FromMeta)]
 struct PageArgs {
-    on_navbar: Option<bool>,
     title: String,
     route: Option<String>,
     file_name: Option<String>,
@@ -44,7 +42,6 @@ impl From<PageArgs> for Page {
     fn from(page_args: PageArgs) -> Page {
         Page {
             kind: PageKind::StaticPage,
-            on_navbar: page_args.on_navbar.unwrap_or_default(),
             title: page_args.title,
             route: page_args.route.unwrap_or("/".to_string()),
             file_name: page_args.file_name
@@ -59,7 +56,6 @@ impl From<BlogPostArgs> for Page {
                 published: blog_post_args.published,
                 publish_date: blog_post_args.publish_date,
             },
-            on_navbar: false,
             title: blog_post_args.title,
             route: "/posts/".to_string(),
             file_name: None,
@@ -81,7 +77,6 @@ pub fn blog_post(args: TokenStream, input: TokenStream) -> TokenStream {
 pub fn blog_index(_args: TokenStream, input: TokenStream) -> TokenStream {
     let blog_index = Page{
         kind: PageKind::BlogIndex,
-        on_navbar: true,
         title: "Posts".to_string(),
         route: "/posts".to_string(),
         file_name: Some("/index".to_string())
@@ -94,7 +89,6 @@ pub fn blog_index(_args: TokenStream, input: TokenStream) -> TokenStream {
 pub fn home_page(_args: TokenStream, input: TokenStream) -> TokenStream {
     let home_page = Page{
         kind: PageKind::HomePage,
-        on_navbar: true,
         title: "Home".to_string(),
         route: "/".to_string(),
         file_name: Some("index".to_string())
@@ -145,18 +139,18 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
         PageKind::BlogIndex => quote! { PageKind::BlogIndex },
         PageKind::HomePage => quote! { PageKind::HomePage{ body: #body } },
     };
-    let on_navbar = page.on_navbar;
     let page_title = page.title;
     let file_name = page.file_name.unwrap_or(fn_ident.to_string());
     let route = format!("{}{}", page.route, file_name);
 
     quote! {
         pub(crate) fn #fn_ident() -> Page {
+            let route = Route(#route);
+
             Page{
                 kind: #kind,
-                on_navbar: #on_navbar,
                 title: #page_title,
-                route: #route
+                route
             }
         }
     }
