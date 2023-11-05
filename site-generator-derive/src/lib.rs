@@ -97,6 +97,31 @@ pub fn home_page(_args: TokenStream, input: TokenStream) -> TokenStream {
     create_page(home_page, input)
 }
 
+#[derive(Debug, Default, FromMeta)]
+struct NavbarLinkArgs {
+    title: String,
+    route: String,
+}
+
+#[proc_macro_attribute]
+pub fn navbar_link(args: TokenStream, input: TokenStream) -> TokenStream {
+    let fn_item = parse_macro_input!(input as ItemFn);
+    let fn_ident = fn_item.sig.ident;
+
+    match NestedMeta::parse_meta_list(proc_macro2::TokenStream::from(args)) {
+        Ok(attr_args) => match NavbarLinkArgs::from_list(&attr_args) {
+            Ok(NavbarLinkArgs{title, route}) => quote!{
+                pub(crate) fn #fn_ident() -> NavbarLink {
+                    NavbarLink{ title: #title, route: Route(#route) }
+                }
+            }
+            .into(),
+            Err(e) => TokenStream::from(e.write_errors())
+        },
+        Err(e) => TokenStream::from(Error::from(e).write_errors())
+    }
+}
+
 fn create_page_from_args<T: FromMeta + Into<Page>>(args: TokenStream, input: TokenStream) -> TokenStream {
     match parse_page_args::<T>(args) {
         Ok(page) => create_page(page, input),
