@@ -10,8 +10,7 @@
     },
 
     "routes": {
-        "/": "_site/",
-        "/posts": "_site/posts/"
+        "/": "_site/"
     },
 
     "static": {
