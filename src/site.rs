@@ -1,7 +1,7 @@
 use std::{fs, path::Path};
 use maud::Markup;
 use args::Args;
-use page::{Page, PageKind, BlogPost};
+use page::{Page, PageKind, Post};
 use templates::{master_template, navbar_items};
 use navbar_link::NavbarLink;
 
@@ -28,7 +28,7 @@ impl Site<'_> {
         fs::create_dir_all(format!("{}/static", Self::BLOG_BUILD_PATH))?;
 
         for page in self.pages {
-            if let PageKind::BlogPost(BlogPost{ published: false, .. }) = page.kind {
+            if let PageKind::Post(Post{ published: false, .. }) = page.kind {
                 continue;
             }
 
@@ -38,12 +38,12 @@ impl Site<'_> {
         Ok(())
     }
 
-    pub(crate) fn ordered_blog_posts(&self) -> impl Iterator<Item = (&Page, BlogPost)> {
+    pub(crate) fn ordered_posts(&self) -> impl Iterator<Item = (&Page, Post)> {
         self.pages
             .iter()
             .filter_map(move |page| match page.kind {
-                PageKind::BlogPost(blog_post) if blog_post.page_published(self.args.dev) =>
-                    Some((page, blog_post)),
+                PageKind::Post(post) if post.page_published(self.args.dev) =>
+                    Some((page, post)),
                 _ => None
             })
     }

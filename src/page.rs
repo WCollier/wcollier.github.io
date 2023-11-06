@@ -7,7 +7,7 @@ use route::Route;
 pub(crate) type Body = &'static [&'static str];
 
 #[derive(Copy, Clone, Debug)]
-pub(crate) struct BlogPost {
+pub(crate) struct Post {
     pub(crate) published: bool,
     pub(crate) publish_date: NaiveDate,
     pub(crate) body: Body,
@@ -16,8 +16,8 @@ pub(crate) struct BlogPost {
 #[derive(Copy, Clone, Debug)]
 pub(crate) enum PageKind {
     StaticPage{ body: Body },
-    BlogPost(BlogPost),
-    BlogIndex,
+    Post(Post),
+    PostsIndex,
     HomePage{ body: Body },
 }
 
@@ -32,7 +32,7 @@ impl Page {
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
             PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
-            PageKind::BlogPost(blog_post) => html! {
+            PageKind::Post(blog_post) => html! {
                 span class="published" {
                     i {
                         "Published: " (blog_post.publish_date.format("%Y-%m-%d").to_string())
@@ -40,7 +40,7 @@ impl Page {
                 }
                 (Self::body_to_markup(blog_post.body))
             },
-            PageKind::BlogIndex => templates::blog_index_template(site),
+            PageKind::PostsIndex => templates::posts_index_template(site),
             PageKind::HomePage{ body } => templates::home_page_template(site, body)
         }
     }
@@ -50,7 +50,7 @@ impl Page {
     }
 }
 
-impl BlogPost {
+impl Post {
     pub(crate) fn page_published(&self, dev_mode: bool) -> bool {
         self.published || dev_mode
     }

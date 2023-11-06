@@ -8,11 +8,8 @@ use darling::{Error, FromMeta, ast::NestedMeta};
 #[derive(Clone, Debug)]
 enum PageKind {
     StaticPage,
-    BlogPost{
-        published: bool,
-        publish_date: String,
-    },
-    BlogIndex,
+    Post{ published: bool, publish_date: String },
+    PostsIndex,
     HomePage
 }
 
@@ -32,7 +29,7 @@ struct PageArgs {
 }
 
 #[derive(Default, FromMeta)]
-struct BlogPostArgs {
+struct PostArgs {
     title: String,
     published: bool,
     publish_date: String,
@@ -49,14 +46,14 @@ impl From<PageArgs> for Page {
     }
 }
 
-impl From<BlogPostArgs> for Page {
-    fn from(blog_post_args: BlogPostArgs) -> Page {
+impl From<PostArgs> for Page {
+    fn from(post_args: PostArgs) -> Page {
         Page {
-            kind: PageKind::BlogPost{
-                published: blog_post_args.published,
-                publish_date: blog_post_args.publish_date,
+            kind: PageKind::Post{
+                published: post_args.published,
+                publish_date: post_args.publish_date,
             },
-            title: blog_post_args.title,
+            title: post_args.title,
             route: "/posts/".to_string(),
             file_name: None,
         }
@@ -69,20 +66,20 @@ pub fn page(args: TokenStream, input: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn blog_post(args: TokenStream, input: TokenStream) -> TokenStream {
-    create_page_from_args::<BlogPostArgs>(args, input)
+pub fn post(args: TokenStream, input: TokenStream) -> TokenStream {
+    create_page_from_args::<PostArgs>(args, input)
 }
 
 #[proc_macro_attribute]
-pub fn blog_index(_args: TokenStream, input: TokenStream) -> TokenStream {
-    let blog_index = Page{
-        kind: PageKind::BlogIndex,
+pub fn posts_index(_args: TokenStream, input: TokenStream) -> TokenStream {
+    let posts_index = Page{
+        kind: PageKind::PostsIndex,
         title: "Posts".to_string(),
         route: "/posts".to_string(),
         file_name: Some("/index".to_string())
     };
 
-    create_page(blog_index, input)
+    create_page(posts_index, input)
 }
 
 #[proc_macro_attribute]
@@ -146,14 +143,14 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
     let body = quote! { &[#(#body,)*] };
     let kind = match page.kind {
         PageKind::StaticPage => quote! { PageKind::StaticPage{ body: #body} },
-        PageKind::BlogPost{ published, publish_date } => {
+        PageKind::Post{ published, publish_date } => {
             quote! {
                 {
                     let publish_date = NaiveDate::parse_from_str(&#publish_date, crate::templates::DATE_FORMAT)
                         .ok()
                         .expect("Could not parse date time");
 
-                    PageKind::BlogPost(BlogPost{
+                    PageKind::Post(Post{
                         published: #published,
                         publish_date: publish_date,
                         body: #body
@@ -161,7 +158,7 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
                 }
             }
         },
-        PageKind::BlogIndex => quote! { PageKind::BlogIndex },
+        PageKind::PostsIndex => quote! { PageKind::PostsIndex },
         PageKind::HomePage => quote! { PageKind::HomePage{ body: #body } },
     };
     let page_title = page.title;

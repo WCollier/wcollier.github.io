@@ -18,7 +18,7 @@ fn main() -> std::io::Result<()> {
             pages::home_page(),
             pages::about(),
             pages::unknown_page(),
-            pages::blog_index()
+            pages::posts_index()
         ],
         navbar_links: &[
             navbar_link::home_link(),
