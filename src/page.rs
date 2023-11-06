@@ -32,13 +32,13 @@ impl Page {
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
             PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
-            PageKind::Post(blog_post) => html! {
+            PageKind::Post(post) => html! {
                 span class="published" {
                     i {
-                        "Published: " (blog_post.publish_date.format("%Y-%m-%d").to_string())
+                        "Published: " (post.publish_date.format("%Y-%m-%d").to_string())
                     }
                 }
-                (Self::body_to_markup(blog_post.body))
+                (Self::body_to_markup(post.body))
             },
             PageKind::PostsIndex => templates::posts_index_template(site),
             PageKind::HomePage{ body } => templates::home_page_template(site, body)
