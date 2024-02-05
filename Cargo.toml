@@ -11,7 +11,7 @@ members = [
 clap = { version = "4.4.18", features = ["derive"] }
 site-generator-derive = { path = "site-generator-derive" }
 maud = "0.26.0"
-darling = "0.20.0"
+darling = "0.20.5"
 syn = "2.0.48"
 chrono = "0.4.33"
 markdown = "1.0.0-alpha.16"
