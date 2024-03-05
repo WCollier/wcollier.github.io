@@ -12,7 +12,7 @@ pub(crate) struct Site<'a> {
 }
 
 impl Site<'_> {
-    const BLOG_BUILD_PATH: &str = "_site";
+    const BLOG_BUILD_PATH: &'static str = "_site";
 
     pub(crate) fn generate_site(self) -> std::io::Result<()> {
         let navbar_items = navbar_items(&self);
