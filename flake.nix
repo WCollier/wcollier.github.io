@@ -22,8 +22,12 @@
       let 
         overlays = [ ( import rust-overlay) ];
         pkgs = import nixpkgs { inherit system overlays; };
+        rustPlatform = pkgs.makeRustPlatform {
+          cargo = pkgs.rust-bin.stable.latest.default;
+          rustc = pkgs.rust-bin.stable.latest.default;
+        };
         cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-        site-generator = pkgs.rustPlatform.buildRustPackage {
+        site-generator = rustPlatform.buildRustPackage {
           pname = cargoToml.package.name;
           version = cargoToml.package.version;
           src = ./.;
