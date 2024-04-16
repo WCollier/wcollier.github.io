@@ -26,24 +26,12 @@
           src = ./.;
           cargoLock.lockFile = ./Cargo.lock;
         };
-        wcollier = pkgs.stdenv.mkDerivation {
-          name = "wcollier.github.io";
-          src = ./.;
-          buildInputs = [ site-generator ];
-          buildPhase = ''
-            mkdir out
-            ${site-generator}/bin/site-generator
-          '';
-          installPhase = ''
-            mkdir -p $out/_site
-            cp -r _site $out/
-          '';
-        };
         host = pkgs.writeShellApplication {
           name = "host";
-          runtimeInputs = [ pkgs.simple-http-server wcollier ];
+          runtimeInputs = [ pkgs.simple-http-server site-generator ];
           text = ''
-            cd ${wcollier}/_site
+            ${site-generator}/bin/site-generator
+            cd _site
             simple-http-server -i
           '';
         };
@@ -53,12 +41,17 @@
           buildInputs = [ rust-bin.stable.latest.default ];
         };
 
-        apps.default = {
-          type = "app";
-          program = "${host}/bin/host";
-        };
+        apps = {
+          default = {
+            type = "app";
+            program = "${host}/bin/host";
+          };
 
-        packages.default = wcollier;
+          build = {
+            type = "app";
+            program = "${site-generator}/bin/site-generator";
+          };
+        };
       }
     );
 }
