@@ -45,7 +45,7 @@
           installPhase = ''
             mkdir -p $out/_site
             cp -r _site $out/
-            cp ${cv-package}/cv.pdf $out/_site/static/
+            #cp ${cv-package}/cv.pdf $out/_site/static/
           '';
         };
         host = pkgs.writeShellApplication {

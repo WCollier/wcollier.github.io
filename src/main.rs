@@ -24,7 +24,7 @@ fn main() -> std::io::Result<()> {
             navbar_link::home_link(),
             navbar_link::about_link(),
             navbar_link::posts_link(),
-            navbar_link::cv_link()
+            // navbar_link::cv_link()
         ],
         args: args::parse(),
     };

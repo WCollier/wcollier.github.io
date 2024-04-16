@@ -16,5 +16,5 @@ pub(crate) fn about_link() {}
 #[navbar_link(title = "Posts", route = "/posts")]
 pub(crate) fn posts_link() {}
 
-#[navbar_link(title = "CV", route = "/static/cv.pdf")]
-pub(crate) fn cv_link() {}
+// #[navbar_link(title = "CV", route = "/static/cv.pdf")]
+// pub(crate) fn cv_link() {}
