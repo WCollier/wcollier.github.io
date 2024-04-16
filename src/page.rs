@@ -1,13 +1,13 @@
-use std::path::Path;
 use maud::{html, Markup, PreEscaped};
 use chrono::NaiveDate;
 use site::Site;
 use templates;
+use route::Route;
 
 pub(crate) type Body = &'static [&'static str];
 
 #[derive(Copy, Clone, Debug)]
-pub(crate) struct BlogPost {
+pub(crate) struct Post {
     pub(crate) published: bool,
     pub(crate) publish_date: NaiveDate,
     pub(crate) body: Body,
@@ -16,44 +16,31 @@ pub(crate) struct BlogPost {
 #[derive(Copy, Clone, Debug)]
 pub(crate) enum PageKind {
     StaticPage{ body: Body },
-    BlogPost(BlogPost),
-    BlogIndex,
+    Post(Post),
+    PostsIndex,
     HomePage{ body: Body },
 }
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct Page {
     pub(crate) kind: PageKind,
-    pub(crate) on_navbar: bool,
     pub(crate) title: &'static str,
-    pub(crate) route: &'static str
+    pub(crate) route: Route, 
 }
 
 impl Page {
-    pub(crate) fn full_route(&self) -> String {
-        let path = Path::new(self.route);
-
-        match (path.parent(), path.file_name()) {
-            (Some(parent), Some(file_name)) if file_name == "index" =>
-                format!("{}", parent.display()),
-
-            _ =>
-                format!("{}.html", self.route)
-        }
-    }
-
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
             PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
-            PageKind::BlogPost(blog_post) => html! {
+            PageKind::Post(post) => html! {
                 span class="published" {
                     i {
-                        "Published: " (blog_post.publish_date.format("%Y-%m-%d").to_string())
+                        "Published: " (post.publish_date.format("%Y-%m-%d").to_string())
                     }
                 }
-                (Self::body_to_markup(blog_post.body))
+                (Self::body_to_markup(post.body))
             },
-            PageKind::BlogIndex => templates::blog_index_template(site),
+            PageKind::PostsIndex => templates::posts_index_template(site),
             PageKind::HomePage{ body } => templates::home_page_template(site, body)
         }
     }
@@ -63,7 +50,7 @@ impl Page {
     }
 }
 
-impl BlogPost {
+impl Post {
     pub(crate) fn page_published(&self, dev_mode: bool) -> bool {
         self.published || dev_mode
     }

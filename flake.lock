@@ -1,5 +1,28 @@
 {
   "nodes": {
+    "cv": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709663780,
+        "narHash": "sha256-c+Bd206DdpEvw6dfCGh6xW16j2Y39FopQCAGft8zwZY=",
+        "owner": "wcollier",
+        "repo": "cv",
+        "rev": "3a4c6964d6e421dbfe35807e8e35c19decdbdac0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wcollier",
+        "repo": "cv",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -54,6 +77,7 @@
     },
     "root": {
       "inputs": {
+        "cv": "cv",
         "flake-utils": "flake-utils",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay"

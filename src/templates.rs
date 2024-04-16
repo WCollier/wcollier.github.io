@@ -1,6 +1,6 @@
 use maud::{html, Markup, DOCTYPE};
 use site::Site;
-use page::{Page, BlogPost, Body};
+use page::{Page, Post, Body};
 
 pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
 
@@ -8,17 +8,17 @@ const HIGHLIGHT_JS_CSS: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11
 
 const HIGHLIGHT_JS_SCRIPT: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js";
 
-pub(crate) fn blog_index_template(site: &Site) -> Markup {
-    let mut blog_posts = site.ordered_blog_posts().collect::<Vec<(&Page, BlogPost)>>();
+pub(crate) fn posts_index_template(site: &Site) -> Markup {
+    let mut posts = site.ordered_posts().collect::<Vec<(&Page, Post)>>();
 
-    blog_posts.sort_by_key(|(_page, blog_post)| std::cmp::Reverse(blog_post.publish_date));
+    posts.sort_by_key(|(_page, post)| std::cmp::Reverse(post.publish_date));
 
     html! {
         ul {
-            @for (page, blog_post) in blog_posts {
+            @for (page, post) in posts {
                 li {
-                    (blog_post.publish_date.format(DATE_FORMAT).to_string()) " - "
-                    a href=(page.full_route()) { (page.title) }
+                    (post.publish_date.format(DATE_FORMAT).to_string()) " - "
+                    a href=(page.route) { (page.title) }
                 }
             }
         }
@@ -26,15 +26,15 @@ pub(crate) fn blog_index_template(site: &Site) -> Markup {
 }
 
 pub(crate) fn home_page_template(site: &Site, body: Body) -> Markup {
-    let latest_blog_post = site.ordered_blog_posts().max_by_key(|(_page, blog_post)| blog_post.publish_date);
+    let latest_post = site.ordered_posts().max_by_key(|(_page, post)| post.publish_date);
 
     html! {
         (Page::body_to_markup(body))
 
-        @if let Some((page, _latest_blog_post)) = latest_blog_post {
+        @if let Some((page, _latest_post)) = latest_post {
             p {
-                "Latest blog post: "
-                a href=(page.full_route()) { (page.title) }
+                "Latest post: "
+                a href=(page.route) { (page.title) }
             }
         }
     }
@@ -75,14 +75,13 @@ pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Marku
 }
 
 pub(crate) fn navbar_items(site: &Site) -> Markup {
-    let on_navbar_pages = pages_on_navbar(site.pages);
-    let mut navbar_pages = on_navbar_pages.into_iter().peekable();
+    let mut navbar_links = site.navbar_links.iter().peekable();
 
     html! {
-        @while let Some(on_navbar_page) = navbar_pages.next() {
-            a href=(on_navbar_page.full_route()) { (on_navbar_page.title) }
+        @while let Some(navbar_link) = navbar_links.next() {
+            a href=(navbar_link.route) { (navbar_link.title) }
 
-            @if navbar_pages.peek().is_some() {
+            @if navbar_links.peek().is_some() {
                 " | "
             }
         }
@@ -110,11 +109,4 @@ fn page_style() -> Markup {
     html! { 
         style type="text/css" { (css) } 
     }
-}
-
-fn pages_on_navbar(pages: &[Page]) -> Vec<&Page> {
-    pages
-        .iter()
-        .filter(|page| page.on_navbar)
-        .collect::<Vec<&Page>>()
 }

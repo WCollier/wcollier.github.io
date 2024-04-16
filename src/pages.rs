@@ -1,21 +1,22 @@
 use site_generator_derive::*;
 use chrono::NaiveDate;
-use page::{Page, PageKind, BlogPost};
+use page::{Page, PageKind, Post};
+use route::Route;
 
 /// ### Welcome to my website
 #[home_page()]
 pub(crate) fn home_page() {}
 
 /// ### My about page
-#[page(title = "About", on_navbar = true)]
+#[page(title = "About")]
 pub(crate) fn about() {}
 
 /// ### This page cannot be found
 #[page(title = "404", file_name = "404")]
 pub(crate) fn unknown_page() {}
 
-#[blog_index()]
-pub(crate) fn blog_index() {}
+#[posts_index()]
+pub(crate) fn posts_index() {}
 
 /// My website is generated using a custom static site generator written in Rust. There are no
 /// reasons why a pre-existing generator couldn't be used, but writing my own is fun. 
@@ -60,5 +61,5 @@ pub(crate) fn blog_index() {}
 /// I am without constraints that a third-party solution may burden me with. However, I am entirely responsible for code the base and must implement all the features I desire myself.
 ///
 /// See the Git repository [here](https://www.github.com/WCollier/wcollier.github.io).
-#[blog_post(title = "How my Static Site Generator works", published = true, publish_date = "2023-09-24")]
+#[post(title = "How my Static Site Generator works", published = true, publish_date = "2023-09-24")]
 pub(crate) fn how_my_static_site_generator_works() {}
