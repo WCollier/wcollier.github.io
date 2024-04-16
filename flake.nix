@@ -8,16 +8,9 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    cv = {
-      url = "github:wcollier/cv";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
-    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, rust-overlay, cv }:
+  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
     flake-utils.lib.eachDefaultSystem (system:
       let 
         overlays = [ ( import rust-overlay) ];
@@ -33,11 +26,10 @@
           src = ./.;
           cargoLock.lockFile = ./Cargo.lock;
         };
-        cv-package = cv.packages.${system}.default;
         wcollier = pkgs.stdenv.mkDerivation {
           name = "wcollier.github.io";
           src = ./.;
-          buildInputs = [ site-generator cv-package ];
+          buildInputs = [ site-generator ];
           buildPhase = ''
             mkdir out
             ${site-generator}/bin/site-generator
@@ -45,7 +37,6 @@
           installPhase = ''
             mkdir -p $out/_site
             cp -r _site $out/
-            #cp ${cv-package}/cv.pdf $out/_site/static/
           '';
         };
         host = pkgs.writeShellApplication {
