@@ -63,3 +63,31 @@ pub(crate) fn posts_index() {}
 /// See the Git repository [here](https://www.github.com/WCollier/wcollier.github.io).
 #[post(title = "How my Static Site Generator works", published = true, publish_date = "2023-09-24")]
 pub(crate) fn how_my_static_site_generator_works() {}
+
+/// The Nix community has a scattered collection of Wikis, tutorial sites, blogs, forums and more. Some
+/// of these are official others community created. I wanted to collate as many educational links in one place as possible. 
+///
+/// Hopefully, someone else finds this useful :)
+///
+/// * [Nix Learn](https://nixos.org/learn/) - Starting point for learning Nix on the official site
+/// * [Nix Manual](https://nixos.org/manual/nix/stable)
+/// * [Nixpkgs Manual](https://nixos.org/manual/nixpkgs/stable)
+/// * [NixOS Manual](https://nixos.org/manual/nixos/stable)
+/// * [Nix Pills](https://nixos.org/guides/nix-pills) - Series of guides for demonstrating Nix
+/// * [Official NixOS Wiki](https://wiki.nixos.org/wiki/NixOS_Wiki)
+/// * [Unofficial NixOs Wiki](https://nixos.wiki/wiki/Main_Page)
+/// * [NixOs Discourse](https://discourse.nixos.org/) - Official Nix forum
+/// * [Nix Subreddit](https://old.reddit.com/r/nixos) - Beware the design. Somehow, the custom CSS
+/// on Reddit's old interface is worse than Reddit's new interface!
+/// * [Zero to Nix](https://zero-to-nix.com/) - Third-party guide for learning Nix. Uses flakes.
+/// * [Awesome Nix](https://github.com/nix-community/awesome-nix)
+/// * [NixOS Search](https://search.nixos.org/options)
+/// * [Nixpkgs Search](https://search.nixos.org/packages)
+/// * [Home Manager Option Search](https://home-manager-options.extranix.com/)
+/// * [nix.dev](https://nix.dev/) - Official documentation for the Nix ecosystem
+/// * [How to Learn Nix](https://ianthehenry.com/posts/how-to-learn-nix/) - Series of blog posts
+/// * [Nix Learning](https://github.com/humancalico/nix-learning) - Another index like this one
+/// * [The Nix Hour](https://www.youtube.com/playlist?list=PLyzwHTVJlRc8yjlx4VR4LU5A5O44og9in) - YouTube playlist about Nix
+/// * [Learn Nix in Y Minutes](https://learnxinyminutes.com/docs/nix/) - Quick outline of the Nix language
+#[post(title = "Nix Links", published = true, publish_date = "2024-07-24")]
+pub(crate) fn nix_links() {}
