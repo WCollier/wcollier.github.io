@@ -8,10 +8,10 @@ members = [
 ]
 
 [dependencies]
-clap = { version = "4.5.4", features = ["derive"] }
+clap = { version = "4.5.13", features = ["derive"] }
 site-generator-derive = { path = "site-generator-derive" }
 maud = "0.26.0"
 darling = "0.20.8"
-syn = "2.0.66"
+syn = "2.0.72"
 chrono = "0.4.38"
-markdown = "1.0.0-alpha.17"
+markdown = "1.0.0-alpha.18"
