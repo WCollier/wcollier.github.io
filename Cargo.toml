@@ -12,6 +12,6 @@ clap = { version = "4.5.21", features = ["derive"] }
 site-generator-derive = { path = "site-generator-derive" }
 maud = "0.26.0"
 darling = "0.20.8"
-syn = "2.0.87"
+syn = "2.0.90"
 chrono = "0.4.38"
 markdown = "1.0.0-alpha.21"
