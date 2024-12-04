@@ -1,8 +1,8 @@
 use maud::{html, Markup, PreEscaped};
 use chrono::NaiveDate;
-use site::Site;
-use templates;
-use route::Route;
+use crate::site::Site;
+use crate::templates;
+use crate::route::Route;
 
 pub(crate) type Body = &'static [&'static str];
 
@@ -31,21 +31,21 @@ pub(crate) struct Page {
 impl Page {
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
-            PageKind::StaticPage{ body } => html! { (self.body_to_markup(body)) },
-            PageKind::BlogPost(blog_post) => html! {
+            PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
+            PageKind::Post(post) => html! {
                 span class="published" {
                     i {
                         "Published: " (post.publish_date.format("%Y-%m-%d").to_string())
                     }
                 }
-                (self.body_to_markup(blog_post.body))
+                (Self::body_to_markup(post.body))
             },
             PageKind::PostsIndex => templates::posts_index_template(site),
             PageKind::HomePage{ body } => templates::home_page_template(site, body)
         }
     }
 
-    fn body_to_markup(&self, body: &'static [&'static str]) -> Markup {
+    pub(crate) fn body_to_markup(body: &'static [&'static str]) -> Markup {
         let body = body.join("\n");
         let options = comrak::ComrakOptions::default();
         let syntax_highlighter = comrak::plugins::syntect::SyntectAdapterBuilder
@@ -58,8 +58,13 @@ impl Page {
                 heading_adapter: None,
             }
         };
+        let markdown = comrak::markdown_to_html_with_plugins(&body, &options, &plugins);
 
-        PreEscaped(comrak::markdown_to_html_with_plugins(&body, &options, &plugins))
+        html! {
+            div class="code" {
+                (PreEscaped(markdown))
+            }
+        }
     }
 }
 

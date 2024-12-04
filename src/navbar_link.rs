@@ -1,5 +1,5 @@
 use site_generator_derive::navbar_link;
-use route::Route;
+use crate::route::Route;
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct NavbarLink {

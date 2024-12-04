@@ -1,9 +1,9 @@
 use std::{fs, path::Path};
 use maud::Markup;
-use args::Args;
-use page::{Page, PageKind, Post};
-use templates::{master_template, navbar_items};
-use navbar_link::NavbarLink;
+use crate::args::Args;
+use crate::page::{Page, PageKind, Post};
+use crate::templates::{master_template, navbar_items};
+use crate::navbar_link::NavbarLink;
 
 pub(crate) struct Site<'a> {
     pub(crate) pages: &'a [Page],
