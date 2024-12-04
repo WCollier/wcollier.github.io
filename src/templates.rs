@@ -1,6 +1,6 @@
-use maud::{html, Markup, DOCTYPE};
-use site::Site;
-use page::{Page, Post, Body};
+use maud::{html, Markup, PreEscaped, DOCTYPE};
+use crate::site::Site;
+use crate::page::{Page, Post, Body};
 
 pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
 
@@ -95,9 +95,12 @@ fn page_style() -> Markup {
         .published {
             font-size: medium;
         }
+        div.code > pre {
+            overflow-y: scroll;
+        }
     ";
 
     html! { 
-        style type="text/css" { (css) } 
+        style type="text/css" { (PreEscaped(css)) } 
     }
 }
