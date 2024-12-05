@@ -16,6 +16,7 @@ impl Site<'_> {
 
     pub(crate) fn generate_site(self) -> std::io::Result<()> {
         let navbar_items = navbar_items(&self);
+        let copy_options = fs_extra::dir::CopyOptions::new();
 
         if Path::try_exists(Path::new(Self::BLOG_BUILD_PATH))? {
             fs::remove_dir_all(Self::BLOG_BUILD_PATH)?;
@@ -25,7 +26,10 @@ impl Site<'_> {
 
         fs::create_dir_all(format!("{}/posts", Self::BLOG_BUILD_PATH))?;
 
-        fs::create_dir_all(format!("{}/static", Self::BLOG_BUILD_PATH))?;
+        fs_extra::dir::copy("static", Self::BLOG_BUILD_PATH, &copy_options)
+            .expect("Failed to create static directory");
+
+        println!("Written static directory");
 
         for page in self.pages {
             if let PageKind::Post(Post{ published: false, .. }) = page.kind {
