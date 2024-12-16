@@ -13,5 +13,5 @@ site-generator-derive = { path = "site-generator-derive" }
 maud = "0.26.0"
 darling = "0.20.8"
 syn = "2.0.90"
-chrono = "0.4.38"
+chrono = "0.4.39"
 markdown = "1.0.0-alpha.21"
