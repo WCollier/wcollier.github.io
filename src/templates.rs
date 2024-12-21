@@ -27,9 +27,9 @@ pub(crate) fn home_page_template(site: &Site, body: Body) -> Markup {
     html! {
         (Page::body_to_markup(body))
 
-        @if let Some((page, _latest_post)) = latest_post {
+        @if let Some((page, latest_post)) = latest_post {
             p {
-                "Latest post: "
+                "Latest post (" (latest_post.format_publish_date()) "): "
                 a href=(page.route) { (page.title) }
             }
         }

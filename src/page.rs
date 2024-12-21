@@ -35,7 +35,7 @@ impl Page {
             PageKind::Post(post) => html! {
                 span class="published" {
                     i {
-                        "Published: " (post.publish_date.format("%Y-%m-%d").to_string())
+                        "Published: " (post.format_publish_date())
                     }
                 }
                 (Self::body_to_markup(post.body))
@@ -71,5 +71,9 @@ impl Page {
 impl Post {
     pub(crate) fn page_published(&self, dev_mode: bool) -> bool {
         self.published || dev_mode
+    }
+
+    pub(crate) fn format_publish_date(&self) -> String {
+        self.publish_date.format("%Y-%m-%d").to_string()
     }
 }
