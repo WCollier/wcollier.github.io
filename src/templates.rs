@@ -1,12 +1,8 @@
 use maud::{html, Markup, DOCTYPE};
-use site::Site;
-use page::{Page, Post, Body};
+use crate::site::Site;
+use crate::page::{Page, Post, Body};
 
 pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
-
-const HIGHLIGHT_JS_CSS: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css";
-
-const HIGHLIGHT_JS_SCRIPT: &str = "//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js";
 
 pub(crate) fn posts_index_template(site: &Site) -> Markup {
     let mut posts = site.ordered_posts().collect::<Vec<(&Page, Post)>>();
@@ -51,12 +47,7 @@ pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Marku
                 meta content="width=device-width,initial-scale=1.0" name="viewport";
                 meta property="og:title" content=(full_title);
                 meta property="twitter:title" content=(full_title);
-                (page_style()) 
-                link rel="stylesheet" href=(HIGHLIGHT_JS_CSS) {}
-                script src=(HIGHLIGHT_JS_SCRIPT) {}
-                script type="text/javascript" {
-                    "hljs.highlightAll();"
-                }
+                link rel="stylesheet" href="/static/styles.css";
                 title { (full_title) }
             }
             body {
@@ -85,28 +76,5 @@ pub(crate) fn navbar_items(site: &Site) -> Markup {
                 " | "
             }
         }
-    }
-}
-
-fn page_style() -> Markup {
-    let css = "
-        body{
-            margin:40px auto;
-            max-width:650px;
-            line-height:1.6;
-            font-size:18px;
-            color:#444;
-            padding:0 10px
-        }
-        h1,h2,h3{
-            line-height:1.2
-        }
-        .published {
-            font-size: medium;
-        }
-    ";
-
-    html! { 
-        style type="text/css" { (css) } 
     }
 }

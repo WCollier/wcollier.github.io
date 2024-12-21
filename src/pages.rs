@@ -1,7 +1,7 @@
 use site_generator_derive::*;
 use chrono::NaiveDate;
-use page::{Page, PageKind, Post};
-use route::Route;
+use crate::page::{Page, PageKind, Post};
+use crate::route::Route;
 
 /// ### Welcome to my website
 #[home_page()]

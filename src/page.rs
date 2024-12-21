@@ -1,8 +1,8 @@
 use maud::{html, Markup, PreEscaped};
 use chrono::NaiveDate;
-use site::Site;
-use templates;
-use route::Route;
+use crate::site::Site;
+use crate::templates;
+use crate::route::Route;
 
 pub(crate) type Body = &'static [&'static str];
 
@@ -45,8 +45,26 @@ impl Page {
         }
     }
 
-    pub(crate) fn body_to_markup(body: Body) -> Markup {
-        PreEscaped(markdown::to_html(&body.join("\n")))
+    pub(crate) fn body_to_markup(body: &'static [&'static str]) -> Markup {
+        let body = body.join("\n");
+        let options = comrak::ComrakOptions::default();
+        let syntax_highlighter = comrak::plugins::syntect::SyntectAdapterBuilder
+            ::new()
+            .theme("base16-ocean.light")
+            .build();
+        let plugins = comrak::ComrakPlugins{
+            render: comrak::ComrakRenderPlugins{
+                codefence_syntax_highlighter: Some(&syntax_highlighter),
+                heading_adapter: None,
+            }
+        };
+        let markdown = comrak::markdown_to_html_with_plugins(&body, &options, &plugins);
+
+        html! {
+            div class="code" {
+                (PreEscaped(markdown))
+            }
+        }
     }
 }
 
