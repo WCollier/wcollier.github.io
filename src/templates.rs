@@ -51,8 +51,10 @@ pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Marku
                 title { (full_title) }
             }
             body {
-                header { h1 { "William Collier's Website" } }
-                navbar { (navbar_items) }
+                header { 
+                    h1 { "William Collier's Website" } 
+                    navbar { (navbar_items) }
+                }
                 h2 { (title) }
                 (content)
                 footer { 
