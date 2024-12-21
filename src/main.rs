@@ -15,6 +15,7 @@ mod route;
 fn main() -> std::io::Result<()> {
     let site = site::Site{ 
         pages: &[
+            pages::nix_links(),
             pages::how_my_static_site_generator_works(),
             pages::home_page(),
             pages::about(),
