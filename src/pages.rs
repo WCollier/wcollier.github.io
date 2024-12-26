@@ -65,7 +65,7 @@ pub(crate) fn posts_index() {}
 pub(crate) fn how_my_static_site_generator_works() {}
 
 /// The Nix community has a scattered collection of Wikis, tutorial sites, blogs, forums and more. Some
-/// of these are official others community created. I wanted to collate as many educational links in one place as possible. 
+/// of these are official others community created. I wanted to collate as many useful and educational links in one place as possible. 
 ///
 /// Hopefully, someone else finds this useful :)
 ///
