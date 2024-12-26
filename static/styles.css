@@ -15,7 +15,7 @@ h1, h2, h3 {
   font-size: medium;
 }
 
-div.code > pre {
+body > pre {
   overflow-y: scroll;
   padding: 1em;
 }

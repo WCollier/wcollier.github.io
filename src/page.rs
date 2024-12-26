@@ -61,9 +61,7 @@ impl Page {
         let markdown = comrak::markdown_to_html_with_plugins(&body, &options, &plugins);
 
         html! {
-            div class="code" {
-                (PreEscaped(markdown))
-            }
+            (PreEscaped(markdown))
         }
     }
 }
