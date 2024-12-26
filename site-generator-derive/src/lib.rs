@@ -162,7 +162,7 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
         PageKind::HomePage => quote! { PageKind::HomePage{ body: #body } },
     };
     let page_title = page.title;
-    let file_name = page.file_name.unwrap_or(fn_ident.to_string());
+    let file_name = page.file_name.unwrap_or(fn_ident.to_string().replace("_", "-"));
     let route = format!("{}{}", page.route, file_name);
 
     quote! {
