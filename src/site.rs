@@ -16,7 +16,7 @@ impl Site<'_> {
 
     pub(crate) fn generate_site(self) -> std::io::Result<()> {
         let navbar_items = navbar_items(&self);
-        let copy_options = fs_extra::dir::CopyOptions::new();
+        let copy_options = fs_extra::dir::CopyOptions::new().overwrite(true);
 
         if Path::try_exists(Path::new(Self::BLOG_BUILD_PATH))? {
             fs::remove_dir_all(Self::BLOG_BUILD_PATH)?;
