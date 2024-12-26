@@ -71,7 +71,7 @@ pub(crate) fn how_my_static_site_generator_works() {}
 ///
 /// ### Lookup
 ///
-/// I use these daily to search for available options and to track the progress of packages.
+/// I frequently use these to search for available options and to track the progress of packages.
 ///
 /// * [NixOS Search](https://search.nixos.org/options)
 /// * [Nixpkgs Search](https://search.nixos.org/packages)
