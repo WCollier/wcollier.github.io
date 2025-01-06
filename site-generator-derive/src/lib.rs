@@ -142,7 +142,7 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
     let body = parse_doc_comments(&fn_item.attrs);
     let body = quote! { &[#(#body,)*] };
     let kind = match page.kind {
-        PageKind::StaticPage => quote! { PageKind::StaticPage{ body: #body} },
+        PageKind::StaticPage => quote! { PageKind::StaticPage(#body) },
         PageKind::Post{ published, publish_date } => {
             quote! {
                 {
@@ -159,7 +159,7 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
             }
         },
         PageKind::PostsIndex => quote! { PageKind::PostsIndex },
-        PageKind::HomePage => quote! { PageKind::HomePage{ body: #body } },
+        PageKind::HomePage => quote! { PageKind::HomePage(#body) },
     };
     let page_title = page.title;
     let file_name = page.file_name.unwrap_or(fn_ident.to_string().replace("_", "-"));

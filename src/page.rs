@@ -15,10 +15,10 @@ pub(crate) struct Post {
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) enum PageKind {
-    StaticPage{ body: Body },
+    StaticPage(Body),
     Post(Post),
     PostsIndex,
-    HomePage{ body: Body },
+    HomePage(Body),
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -31,7 +31,7 @@ pub(crate) struct Page {
 impl Page {
     pub(crate) fn template(&self, site: &Site) -> Markup {
         match self.kind {
-            PageKind::StaticPage{ body } => html! { (Self::body_to_markup(body)) },
+            PageKind::StaticPage(body) => html! { (Self::body_to_markup(body)) },
             PageKind::Post(post) => html! {
                 span class="published" {
                     i {
@@ -41,7 +41,7 @@ impl Page {
                 (Self::body_to_markup(post.body))
             },
             PageKind::PostsIndex => templates::posts_index_template(site),
-            PageKind::HomePage{ body } => templates::home_page_template(site, body)
+            PageKind::HomePage(body) => templates::home_page_template(site, body)
         }
     }
 
