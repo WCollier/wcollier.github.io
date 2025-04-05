@@ -1,16 +1,19 @@
 extern crate darling;
 
+use darling::{ast::NestedMeta, Error, FromMeta};
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, Expr, ExprLit, ItemFn, Lit, Meta, MetaNameValue};
-use darling::{Error, FromMeta, ast::NestedMeta};
 
 #[derive(Clone, Debug)]
 enum PageKind {
     StaticPage,
-    Post{ published: bool, publish_date: String },
+    Post {
+        published: bool,
+        publish_date: String,
+    },
     PostsIndex,
-    HomePage
+    HomePage,
 }
 
 #[derive(Clone, Debug)]
@@ -41,7 +44,7 @@ impl From<PageArgs> for Page {
             kind: PageKind::StaticPage,
             title: page_args.title,
             route: page_args.route.unwrap_or("/".to_string()),
-            file_name: page_args.file_name
+            file_name: page_args.file_name,
         }
     }
 }
@@ -49,7 +52,7 @@ impl From<PageArgs> for Page {
 impl From<PostArgs> for Page {
     fn from(post_args: PostArgs) -> Page {
         Page {
-            kind: PageKind::Post{
+            kind: PageKind::Post {
                 published: post_args.published,
                 publish_date: post_args.publish_date,
             },
@@ -72,11 +75,11 @@ pub fn post(args: TokenStream, input: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 pub fn posts_index(_args: TokenStream, input: TokenStream) -> TokenStream {
-    let posts_index = Page{
+    let posts_index = Page {
         kind: PageKind::PostsIndex,
         title: "Posts".to_string(),
         route: "/posts".to_string(),
-        file_name: Some("/index".to_string())
+        file_name: Some("/index".to_string()),
     };
 
     create_page(posts_index, input)
@@ -84,11 +87,11 @@ pub fn posts_index(_args: TokenStream, input: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 pub fn home_page(_args: TokenStream, input: TokenStream) -> TokenStream {
-    let home_page = Page{
+    let home_page = Page {
         kind: PageKind::HomePage,
         title: "Home".to_string(),
         route: "/".to_string(),
-        file_name: Some("index".to_string())
+        file_name: Some("index".to_string()),
     };
 
     create_page(home_page, input)
@@ -107,22 +110,25 @@ pub fn navbar_link(args: TokenStream, input: TokenStream) -> TokenStream {
 
     match NestedMeta::parse_meta_list(proc_macro2::TokenStream::from(args)) {
         Ok(attr_args) => match NavbarLinkArgs::from_list(&attr_args) {
-            Ok(NavbarLinkArgs{title, route}) => quote!{
+            Ok(NavbarLinkArgs { title, route }) => quote! {
                 pub(crate) fn #fn_ident() -> NavbarLink {
                     NavbarLink{ title: #title, route: Route(#route) }
                 }
             }
             .into(),
-            Err(e) => TokenStream::from(e.write_errors())
+            Err(e) => TokenStream::from(e.write_errors()),
         },
-        Err(e) => TokenStream::from(Error::from(e).write_errors())
+        Err(e) => TokenStream::from(Error::from(e).write_errors()),
     }
 }
 
-fn create_page_from_args<T: FromMeta + Into<Page>>(args: TokenStream, input: TokenStream) -> TokenStream {
+fn create_page_from_args<T: FromMeta + Into<Page>>(
+    args: TokenStream,
+    input: TokenStream,
+) -> TokenStream {
     match parse_page_args::<T>(args) {
         Ok(page) => create_page(page, input),
-        Err(token_stream) => token_stream
+        Err(token_stream) => token_stream,
     }
 }
 
@@ -130,9 +136,9 @@ fn parse_page_args<T: FromMeta + Into<Page>>(args: TokenStream) -> Result<Page, 
     match NestedMeta::parse_meta_list(proc_macro2::TokenStream::from(args)) {
         Ok(attr_args) => match T::from_list(&attr_args) {
             Ok(v) => Ok(v.into()),
-            Err(e) => Err(TokenStream::from(e.write_errors()))
+            Err(e) => Err(TokenStream::from(e.write_errors())),
         },
-        Err(e) => Err(TokenStream::from(Error::from(e).write_errors()))
+        Err(e) => Err(TokenStream::from(Error::from(e).write_errors())),
     }
 }
 
@@ -143,7 +149,10 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
     let body = quote! { &[#(#body,)*] };
     let kind = match page.kind {
         PageKind::StaticPage => quote! { PageKind::StaticPage(#body) },
-        PageKind::Post{ published, publish_date } => {
+        PageKind::Post {
+            published,
+            publish_date,
+        } => {
             quote! {
                 {
                     let publish_date = NaiveDate::parse_from_str(&#publish_date, crate::templates::DATE_FORMAT)
@@ -157,12 +166,14 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
                     })
                 }
             }
-        },
+        }
         PageKind::PostsIndex => quote! { PageKind::PostsIndex },
         PageKind::HomePage => quote! { PageKind::HomePage(#body) },
     };
     let page_title = page.title;
-    let file_name = page.file_name.unwrap_or(fn_ident.to_string().replace("_", "-"));
+    let file_name = page
+        .file_name
+        .unwrap_or(fn_ident.to_string().replace("_", "-"));
     let route = format!("{}{}", page.route, file_name);
 
     quote! {
@@ -182,15 +193,17 @@ fn create_page(page: Page, input: TokenStream) -> TokenStream {
 fn parse_doc_comments(attrs: &[syn::Attribute]) -> Vec<String> {
     attrs
         .iter()
-        .filter_map(|attr| {
-            match &attr.meta {
-                Meta::NameValue(MetaNameValue {
-                    value: Expr::Lit(ExprLit { lit: Lit::Str(comment), .. }),
-                    path,
-                    ..
-                }) if path.is_ident("doc") => Some(comment.value().to_string()),
-                _ => None,
-            }
+        .filter_map(|attr| match &attr.meta {
+            Meta::NameValue(MetaNameValue {
+                value:
+                    Expr::Lit(ExprLit {
+                        lit: Lit::Str(comment),
+                        ..
+                    }),
+                path,
+                ..
+            }) if path.is_ident("doc") => Some(comment.value().to_string()),
+            _ => None,
         })
         .collect()
 }

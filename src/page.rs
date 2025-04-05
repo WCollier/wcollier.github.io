@@ -1,8 +1,8 @@
-use maud::{html, Markup, PreEscaped};
-use chrono::NaiveDate;
+use crate::route::Route;
 use crate::site::Site;
 use crate::templates;
-use crate::route::Route;
+use chrono::NaiveDate;
+use maud::{html, Markup, PreEscaped};
 
 pub(crate) type Body = &'static [&'static str];
 
@@ -25,7 +25,7 @@ pub(crate) enum PageKind {
 pub(crate) struct Page {
     pub(crate) kind: PageKind,
     pub(crate) title: &'static str,
-    pub(crate) route: Route, 
+    pub(crate) route: Route,
 }
 
 impl Page {
@@ -41,22 +41,21 @@ impl Page {
                 (Self::body_to_markup(post.body))
             },
             PageKind::PostsIndex => templates::posts_index_template(site),
-            PageKind::HomePage(body) => templates::home_page_template(site, body)
+            PageKind::HomePage(body) => templates::home_page_template(site, body),
         }
     }
 
     pub(crate) fn body_to_markup(body: &'static [&'static str]) -> Markup {
         let body = body.join("\n");
         let options = comrak::ComrakOptions::default();
-        let syntax_highlighter = comrak::plugins::syntect::SyntectAdapterBuilder
-            ::new()
+        let syntax_highlighter = comrak::plugins::syntect::SyntectAdapterBuilder::new()
             .theme("base16-ocean.light")
             .build();
-        let plugins = comrak::ComrakPlugins{
-            render: comrak::ComrakRenderPlugins{
+        let plugins = comrak::ComrakPlugins {
+            render: comrak::ComrakRenderPlugins {
                 codefence_syntax_highlighter: Some(&syntax_highlighter),
                 heading_adapter: None,
-            }
+            },
         };
         let markdown = comrak::markdown_to_html_with_plugins(&body, &options, &plugins);
 

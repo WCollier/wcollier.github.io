@@ -1,9 +1,9 @@
-use std::{fs, path::Path};
-use maud::Markup;
 use crate::args::Args;
+use crate::navbar_link::NavbarLink;
 use crate::page::{Page, PageKind, Post};
 use crate::templates::{master_template, navbar_items};
-use crate::navbar_link::NavbarLink;
+use maud::Markup;
+use std::{fs, path::Path};
 
 pub(crate) struct Site<'a> {
     pub(crate) pages: &'a [Page],
@@ -32,7 +32,10 @@ impl Site<'_> {
         println!("Written static directory");
 
         for page in self.pages {
-            if let PageKind::Post(Post{ published: false, .. }) = page.kind {
+            if let PageKind::Post(Post {
+                published: false, ..
+            }) = page.kind
+            {
                 continue;
             }
 
@@ -43,13 +46,10 @@ impl Site<'_> {
     }
 
     pub(crate) fn ordered_posts(&self) -> impl Iterator<Item = (&Page, Post)> {
-        self.pages
-            .iter()
-            .filter_map(move |page| match page.kind {
-                PageKind::Post(post) if post.page_published(self.args.dev) =>
-                    Some((page, post)),
-                _ => None
-            })
+        self.pages.iter().filter_map(move |page| match page.kind {
+            PageKind::Post(post) if post.page_published(self.args.dev) => Some((page, post)),
+            _ => None,
+        })
     }
 
     fn generate(&self, navbar_items: &Markup, page: Page) -> std::io::Result<()> {
@@ -69,4 +69,3 @@ impl Site<'_> {
         Ok(())
     }
 }
-

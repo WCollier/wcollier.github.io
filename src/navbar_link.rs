@@ -1,10 +1,10 @@
-use site_generator_derive::navbar_link;
 use crate::route::Route;
+use site_generator_derive::navbar_link;
 
 #[derive(Copy, Clone, Debug)]
 pub(crate) struct NavbarLink {
     pub(crate) title: &'static str,
-    pub(crate) route: Route, 
+    pub(crate) route: Route,
 }
 
 #[navbar_link(title = "Home", route = "/")]

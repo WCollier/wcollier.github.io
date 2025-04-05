@@ -1,26 +1,26 @@
-extern crate site_generator_derive;
-extern crate maud;
-extern crate clap;
 extern crate chrono;
+extern crate clap;
 extern crate comrak;
+extern crate maud;
+extern crate site_generator_derive;
 
 mod args;
-mod site;
+mod navbar_link;
 mod page;
 mod pages;
-mod templates;
-mod navbar_link;
 mod route;
+mod site;
+mod templates;
 
 fn main() -> std::io::Result<()> {
-    let site = site::Site{ 
+    let site = site::Site {
         pages: &[
             pages::nix_links(),
             pages::how_my_static_site_generator_works(),
             pages::home_page(),
             pages::about(),
             pages::unknown_page(),
-            pages::posts_index()
+            pages::posts_index(),
         ],
         navbar_links: &[
             navbar_link::home_link(),
