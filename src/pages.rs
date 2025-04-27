@@ -80,6 +80,7 @@ pub(crate) fn how_my_static_site_generator_works() {}
 /// * [NixOS Search](https://search.nixos.org/options)
 /// * [Nixpkgs Search](https://search.nixos.org/packages)
 /// * [Home Manager Option Search](https://home-manager-options.extranix.com/)
+/// * [Noogle](https://noogle.dev/)
 /// * [Packages search for NUR](https://nur.nix-community.org/)
 /// * [Nixpkgs-tracker](https://nixpkgs-tracker.ocfox.me/) - Tracks which `nixpkgs` branch a PR has
 /// made it to
