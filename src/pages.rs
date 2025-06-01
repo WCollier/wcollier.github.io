@@ -1,7 +1,7 @@
-use site_generator_derive::*;
-use chrono::NaiveDate;
 use crate::page::{Page, PageKind, Post};
 use crate::route::Route;
+use chrono::NaiveDate;
+use site_generator_derive::*;
 
 /// ### Welcome to my website
 #[home_page()]
@@ -19,8 +19,8 @@ pub(crate) fn unknown_page() {}
 pub(crate) fn posts_index() {}
 
 /// My website is generated using a custom static site generator written in Rust. There are no
-/// reasons why a pre-existing generator couldn't be used, but writing my own is fun. 
-/// While thinking about the code, I remembered that Rust has a feature called [rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html) 
+/// reasons why a pre-existing generator couldn't be used, but writing my own is fun.
+/// While thinking about the code, I remembered that Rust has a feature called [rustdoc](https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html)
 /// and, more importantly, the ability to generate HTML from markdown attached to various syntactical
 /// elements such as function and struct declarations. With this in mind, I decided to write my
 /// static site generator that uses markdown attached to functions and a procedural macro. In
@@ -50,7 +50,7 @@ pub(crate) fn posts_index() {}
 ///     * Complex logic or special pages (such as the [posts index](https://wcollier.github.io/posts)) are all my code, not workarounds built on top of someone else's code.
 /// * Git allows me to experiment with the contents of posts without fear.
 /// * I had fun.
-/// 
+///
 /// ### Disadvantages
 ///
 /// * I must now implement and maintain the static site generator myself :)
@@ -61,11 +61,15 @@ pub(crate) fn posts_index() {}
 /// I am without constraints that a third-party solution may burden me with. However, I am entirely responsible for code the base and must implement all the features I desire myself.
 ///
 /// See the Git repository [here](https://www.github.com/WCollier/wcollier.github.io).
-#[post(title = "How my Static Site Generator works", published = true, publish_date = "2023-09-24")]
+#[post(
+    title = "How my Static Site Generator works",
+    published = true,
+    publish_date = "2023-09-24"
+)]
 pub(crate) fn how_my_static_site_generator_works() {}
 
 /// The Nix community has a scattered collection of Wikis, tutorial sites, blogs, forums and more. Some
-/// of these are official others community created. I wanted to collate as many useful and educational links in one place as possible. 
+/// of these are official others community created. I wanted to collate as many useful and educational links in one place as possible.
 ///
 /// Hopefully, someone else finds this useful :)
 ///
@@ -76,6 +80,7 @@ pub(crate) fn how_my_static_site_generator_works() {}
 /// * [NixOS Search](https://search.nixos.org/options)
 /// * [Nixpkgs Search](https://search.nixos.org/packages)
 /// * [Home Manager Option Search](https://home-manager-options.extranix.com/)
+/// * [Noogle](https://noogle.dev/)
 /// * [Packages search for NUR](https://nur.nix-community.org/)
 /// * [Nixpkgs-tracker](https://nixpkgs-tracker.ocfox.me/) - Tracks which `nixpkgs` branch a PR has
 /// made it to

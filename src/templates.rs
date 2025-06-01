@@ -1,6 +1,6 @@
-use maud::{html, Markup, DOCTYPE};
+use crate::page::{Body, Page, Post};
 use crate::site::Site;
-use crate::page::{Page, Post, Body};
+use maud::{html, Markup, DOCTYPE};
 
 pub(crate) const DATE_FORMAT: &str = "%Y-%m-%d";
 
@@ -22,7 +22,9 @@ pub(crate) fn posts_index_template(site: &Site) -> Markup {
 }
 
 pub(crate) fn home_page_template(site: &Site, body: Body) -> Markup {
-    let latest_post = site.ordered_posts().max_by_key(|(_page, post)| post.publish_date);
+    let latest_post = site
+        .ordered_posts()
+        .max_by_key(|(_page, post)| post.publish_date);
 
     html! {
         (Page::body_to_markup(body))
@@ -37,12 +39,12 @@ pub(crate) fn home_page_template(site: &Site, body: Body) -> Markup {
 }
 
 pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Markup) -> Markup {
-    let full_title = format!("{title} | William Collier"); 
+    let full_title = format!("{title} | William Collier");
 
     html! {
         (DOCTYPE)
         html lang="en-gb" {
-            head { 
+            head {
                 meta charset="UTF-8";
                 meta content="width=device-width,initial-scale=1.0" name="viewport";
                 meta property="og:title" content=(full_title);
@@ -51,13 +53,13 @@ pub(crate) fn master_template(navbar_items: &Markup, title: &str, content: Marku
                 title { (full_title) }
             }
             body {
-                header { 
-                    h1 { "William Collier's Website" } 
+                header {
+                    h1 { "William Collier's Website" }
                     navbar { (navbar_items) }
                 }
                 h2 { (title) }
                 (content)
-                footer { 
+                footer {
                     "William Collier | "
                     a href="https://github.com/WCollier" { "GitHub" }
                     " | 🐧"

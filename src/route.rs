@@ -1,8 +1,8 @@
+use maud::{Markup, PreEscaped, Render};
 use std::path::{Path, PathBuf};
-use maud::{Render, PreEscaped, Markup};
 
 #[derive(Copy, Clone, Debug)]
-pub(crate) struct Route(pub(crate) &'static str); 
+pub(crate) struct Route(pub(crate) &'static str);
 
 impl Route {
     pub(crate) fn file_path(&self) -> PathBuf {
@@ -13,7 +13,7 @@ impl Route {
                 path.set_extension("html");
 
                 path
-            },
+            }
             _ => {
                 path.push("index.html");
 
@@ -28,9 +28,10 @@ impl Render for Route {
         let path = Path::new(self.0);
 
         match (path.parent(), path.file_name()) {
-            (Some(parent), Some(file_name)) if file_name == "index" => 
-                PreEscaped(parent.display().to_string()),
-            _ => PreEscaped(self.0.to_string())
+            (Some(parent), Some(file_name)) if file_name == "index" => {
+                PreEscaped(parent.display().to_string())
+            }
+            _ => PreEscaped(self.0.to_string()),
         }
     }
 }
