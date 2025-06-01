@@ -23,9 +23,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/nix-installer-action@v17
       - uses: DeterminateSystems/magic-nix-cache-action@v7
-      - uses: DeterminateSystems/flake-checker-action@v9
+      - uses: DeterminateSystems/flake-checker-action@v10
 
       # Runs a single command using the runners shell
       - name: Build site
