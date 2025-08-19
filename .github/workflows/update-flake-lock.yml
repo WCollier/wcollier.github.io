@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v17
+      - uses: DeterminateSystems/nix-installer-action@v19
       - uses: DeterminateSystems/magic-nix-cache-action@v10
       - uses: DeterminateSystems/flake-checker-action@v10
       - uses: DeterminateSystems/update-flake-lock@v25
