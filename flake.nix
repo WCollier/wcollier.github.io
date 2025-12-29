@@ -32,7 +32,10 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
-            buildInputs = [ pkgs.rust-bin.stable.latest.default ];
+            buildInputs = [
+              pkgs.rust-bin.stable.latest.default
+              pkgs.simple-http-server
+            ];
           };
         }
       );
