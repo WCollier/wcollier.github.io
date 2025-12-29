@@ -17,7 +17,7 @@
     }:
     let
       overlays = [ (import rust-overlay) ];
-      cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+      cargoToml = fromTOML (builtins.readFile ./Cargo.toml);
       forAllSystems =
         f:
         nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ] (
