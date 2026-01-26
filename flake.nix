@@ -35,7 +35,11 @@
             buildInputs = [
               pkgs.rust-bin.stable.latest.default
               pkgs.simple-http-server
+              pkgs.oniguruma
             ];
+            nativeBuildInputs = [ pkgs.pkg-config ];
+            # use system oniguruma since the bundled one fails to build with gcc15
+            env.RUSTONIG_SYSTEM_LIBONIG = 1;
           };
         }
       );
@@ -51,6 +55,10 @@
             version = cargoToml.package.version;
             src = ./.;
             cargoLock.lockFile = ./Cargo.lock;
+            nativeBuildInputs = [ pkgs.pkg-config ];
+            buildInputs = [ pkgs.ongiuruma ];
+            # use system oniguruma since the bundled one fails to build with gcc15
+            env.RUSTONIG_SYSTEM_LIBONIG = 1;
           };
           host = pkgs.writeShellApplication {
             name = "host";
