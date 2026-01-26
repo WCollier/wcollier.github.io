@@ -56,7 +56,7 @@
             src = ./.;
             cargoLock.lockFile = ./Cargo.lock;
             nativeBuildInputs = [ pkgs.pkg-config ];
-            buildInputs = [ pkgs.ongiuruma ];
+            buildInputs = [ pkgs.oniguruma ];
             # use system oniguruma since the bundled one fails to build with gcc15
             env.RUSTONIG_SYSTEM_LIBONIG = 1;
           };
