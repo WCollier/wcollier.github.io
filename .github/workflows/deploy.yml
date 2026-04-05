@@ -33,7 +33,7 @@ jobs:
           nix run .#build 
           
       - name: Upload artefacts
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
           
   deploy:
     needs: build
