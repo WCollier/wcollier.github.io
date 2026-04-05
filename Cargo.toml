@@ -12,7 +12,7 @@ members = [
 clap = { version = "4.5.60", features = ["derive"] }
 site-generator-derive = { path = "site-generator-derive" }
 maud = "0.26.0"
-darling = "0.20.8"
+darling = "0.23.0"
 syn = "2.0.117"
 chrono = "0.4.41"
 comrak = { version = "0.18.0", default-features = false, features = ["syntect"] }
