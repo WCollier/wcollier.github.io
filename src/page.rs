@@ -2,7 +2,7 @@ use crate::route::Route;
 use crate::site::Site;
 use crate::templates;
 use chrono::NaiveDate;
-use maud::{html, Markup, PreEscaped};
+use maud::{Markup, PreEscaped, html};
 
 pub(crate) type Body = &'static [&'static str];
 
@@ -47,16 +47,15 @@ impl Page {
 
     pub(crate) fn body_to_markup(body: &'static [&'static str]) -> Markup {
         let body = body.join("\n");
-        let options = comrak::ComrakOptions::default();
+        let options = comrak::Options::default();
         let syntax_highlighter = comrak::plugins::syntect::SyntectAdapterBuilder::new()
             .theme("base16-ocean.light")
             .build();
-        let plugins = comrak::ComrakPlugins {
-            render: comrak::ComrakRenderPlugins {
-                codefence_syntax_highlighter: Some(&syntax_highlighter),
-                heading_adapter: None,
-            },
-        };
+
+        let mut plugins = comrak::options::Plugins::default();
+
+        plugins.render.codefence_syntax_highlighter = Some(&syntax_highlighter);
+
         let markdown = comrak::markdown_to_html_with_plugins(&body, &options, &plugins);
 
         html! {
