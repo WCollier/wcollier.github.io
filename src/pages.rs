@@ -109,3 +109,90 @@ pub(crate) fn how_my_static_site_generator_works() {}
 /// on Reddit's old interface is worse than Reddit's new interface!
 #[post(title = "Nix Links", published = true, publish_date = "2024-07-24")]
 pub(crate) fn nix_links() {}
+
+/// Posting on this blog is apparently an annual tradition now. To meet my own arbitrary quota for
+/// posts, I have decided to create a list of things (media, technology, etc.) that I liked this
+/// year. The thing don't have to be released this year, but I do have to enjoyed it this year.
+///
+/// I'll provide a brief summary of why I liked each.
+///
+/// ### Books
+///
+/// I have read a few books this year (as always too few). I found most of them enjoyable but I
+/// found some much more enjoyable than anothers.
+///
+/// #### Chaos: The Truth Behind The Manson Murders
+///
+/// Written by Tom O'Neill. I have long been interested in the 1960s and the counter-culture
+/// movement and it's art.
+///
+/// The book itself goes into great depth in trying to untagle a complex web of individuals and their interests.
+/// The conventional Helter Skelter narrative is disregarded by *O'Neill*'s book.
+/// However, by the author's own admission, a new narrative has not yet been formed.
+/// There are still plenty of details obscured or unknown.
+///
+/// The narrative of itself follows the author's life as the piece evolves from a magazine article
+/// to book. It forms an unitentional document of the evolution of the publishing industry.
+/// We see how the book went from a much-delayed magazine article and, after the closure of the
+/// magazine, to a book.
+///
+/// #### My Struggle Book 1 & 2
+///
+/// Author: Karl Ove Knausgaard. I don't think I have read a book that I can describe as a
+/// page-turner. However, these books are the exception. Reading about the minutae of this Man's
+/// life. Simultaenously banal but inthraling. Many of the details presented in the narrative are
+/// hyper-specific but also very relatable. It's as-if Knausgaard manages to understand something
+/// that also Humans (obvious caveats around demographics). experience but none-others (or atleast those that I have read, which is too few) have yet written.
+/// Some parts of the books do lose me, mostly those relating to Norwegian/Scandinavian art. I am ignorant regarding that topic.
+///
+/// I am looking forward to reading the other installments in this series.
+///
+/// ### Podcasts
+///
+/// #### Weird Medieval Guys
+///
+/// Author: Olivia Swarthout and Aran Prince-Tappé I love podcasts. I listen to quite a few and at least one episode of a podcast per day. With
+/// that being said, Weird Medieval Guys (WMG) is probably my favourite. I consistently go back and
+/// re-listen to episodes of this podcast that I listened to only recently.
+///
+/// Their humour is much my own. The topics they cover are also consistently interesting and enjoyable.
+/// Neither fact nor humour are ignored for the other. Instead a delicate balance is struck between the two.
+///
+/// Some of the older episodes do suffer from unfortunate audio issues. However, all recent
+/// episodes are perfectly listenable.
+///
+/// #### Age of Napoleon
+///
+/// Author: Everett Rummage. Another history podcast. Much different in tone compared to WMG as Age
+/// of Napoleon is almost entirely fact with little humour. The narrative spun here is really quite
+/// good. The podcasts only releases narrative episodes once a month (with a Patreon special
+/// episode also once a month). I look forward to the start of the month so I immerse myself back
+/// into the well-researched world presented here.
+///
+/// However, following the narrative can become difficult (particularly in battles and log
+/// compaigns) while doing other tasks. In those instances, I find myself frequently rewinding and
+/// pausing my task to focus solely on the podcast.
+///
+/// ### Music
+///
+/// TODO(williamcollier): Something here
+///
+/// ### Technology
+///
+/// #### Nix
+///
+/// As I posted about previously on this blog, I continue to use and enjoy Nix. It can be an
+/// absolute pain to work with. Furthermore, the documentation is quite poor and scattered. Despite this, I have
+/// continued to expand my usage of Nix. My main PC no runs NixOS full time (as opposed to using
+/// WSL on Windows 11). I now have a home server that runs NixOS. My laptop continues to run
+/// NixOS.
+///
+/// I'm not sure what would convince my to move away from NixOS at this point. I have invested a
+/// lot of time in setting things up the way I like it.
+///
+#[post(
+    title = "Things I Liked In 2025",
+    published = true,
+    publish_date = "2025-12-29"
+)]
+pub(crate) fn things_i_liked_in_2025() {}
